@@ -2342,14 +2342,16 @@
       mix-blend-mode: multiply;
       pointer-events: none;
     }
+    /* Toggle button (mobile only — hidden on desktop where PSR drives visibility via scroll) */
+    .psr-toggle { display: none; }
+
     @media (max-width: 900px) {
-      /* Mobile: drop the pinned-storytelling pattern entirely. Pinned scroll fights
-         with mobile chrome (URL bar resizing, soft keyboard, viewport math), and the
-         alternating grid layout doesn't translate to a phone width. Instead, stack
-         panels vertically and let them flow with normal scroll. */
+      /* Mobile: drop the pinned-storytelling pattern. Each panel becomes a compact
+         tap-to-expand card with thumbnail + tag + title visible by default; tap
+         reveals desc / bullets / CTA. Cuts services scroll-length from ~10000px → ~1500px. */
       .psr-track {
         height: auto !important;
-        --psr-count: 1; /* avoids any 100vh-per-panel calc bleeding through */
+        --psr-count: 1;
       }
       .psr-stage {
         position: relative;
@@ -2364,55 +2366,171 @@
         position: relative;
         height: auto;
         max-height: none;
-        padding: 24px 22px 64px;
+        padding: 8px 18px 56px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
       }
+
+      /* Compact card layout — collapsed by default */
       .psr-panel {
         position: relative;
         inset: auto;
-        grid-template-columns: 1fr;
-        gap: 22px;
-        padding: 56px 0;
+        display: grid;
+        grid-template-columns: 86px 1fr 36px;
+        grid-template-rows: auto;
+        gap: 14px;
+        align-items: center;
+        padding: 12px 14px;
+        background:
+          linear-gradient(165deg, rgba(201,168,76,0.04) 0%, rgba(201,168,76,0) 50%),
+          var(--obsidian-2);
+        border: 1px solid rgba(201,168,76,0.1);
         opacity: 1 !important;
         transform: none !important;
         pointer-events: auto !important;
-        border-bottom: 1px solid rgba(201,168,76,0.08);
+        cursor: pointer;
+        transition: border-color 0.4s ease, background 0.4s ease;
       }
-      .psr-panel:first-child { padding-top: 8px; }
-      .psr-panel:last-child { border-bottom: none; }
+      .psr-panel:hover { border-color: rgba(201,168,76,0.22); }
       .psr-panel[data-side="right"] .psr-visual { order: 0; }
-      /* Mobile: scroll-into-view fade-up driven by IntersectionObserver.
-         The .mobile-reveal class is added when each panel enters the viewport. */
-      .psr-info > * {
-        opacity: 0;
-        transform: translateY(18px);
-        transition:
-          opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-          transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+
+      .psr-panel .psr-visual {
+        grid-column: 1;
+        grid-row: 1;
+        margin: 0;
       }
-      .psr-visual {
-        opacity: 0;
-        transform: translateY(28px);
-        transition:
-          opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.18s,
-          transform 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.18s;
+      .psr-panel .psr-img {
+        aspect-ratio: 1 / 1;
+        max-height: none;
+        width: 86px;
       }
-      .psr-panel.mobile-reveal .psr-info > * {
-        opacity: 1;
-        transform: translateY(0);
+      .psr-panel .psr-img img {
+        object-fit: cover;
+        object-position: center;
       }
-      .psr-panel.mobile-reveal .psr-info > *:nth-child(1) { transition-delay: 0.05s; }
-      .psr-panel.mobile-reveal .psr-info > *:nth-child(2) { transition-delay: 0.13s; }
-      .psr-panel.mobile-reveal .psr-info > *:nth-child(3) { transition-delay: 0.21s; }
-      .psr-panel.mobile-reveal .psr-info > *:nth-child(4) { transition-delay: 0.29s; }
-      .psr-panel.mobile-reveal .psr-info > *:nth-child(5) { transition-delay: 0.37s; }
-      .psr-panel.mobile-reveal .psr-info > *:nth-child(6) { transition-delay: 0.45s; }
-      .psr-panel.mobile-reveal .psr-visual { opacity: 1; transform: translateY(0); }
-      .psr-img { aspect-ratio: 4/5; max-height: none; }
-      .psr-title { font-size: clamp(2rem, 7vw, 2.8rem); margin-bottom: 14px; }
-      .psr-desc { margin-bottom: 18px; }
-      .psr-bullets { margin-bottom: 22px; }
-      .psr-bullets li { padding: 9px 0 9px 22px; font-size: 0.74rem; }
-      .psr-eyebrow { font-size: 0.7rem; letter-spacing: 0.3em; }
+
+      .psr-panel .psr-info {
+        grid-column: 2;
+        grid-row: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+      }
+      .psr-panel .psr-eyebrow {
+        font-size: 0.58rem;
+        letter-spacing: 0.28em;
+        margin-bottom: 0;
+      }
+      .psr-panel .psr-eyebrow::before { width: 18px; }
+      .psr-panel .psr-title {
+        font-size: 1.05rem;
+        line-height: 1.2;
+        margin-bottom: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      /* Hide expanded-only content when collapsed */
+      .psr-panel .psr-desc,
+      .psr-panel .psr-bullets,
+      .psr-panel .psr-cta {
+        display: none;
+      }
+
+      /* Toggle chevron */
+      .psr-panel .psr-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        grid-column: 3;
+        grid-row: 1;
+        width: 32px;
+        height: 32px;
+        border: 1px solid rgba(201,168,76,0.32);
+        background: rgba(13,11,12,0.4);
+        color: var(--gold);
+        cursor: pointer;
+        padding: 0;
+        flex-shrink: 0;
+        transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease;
+      }
+      .psr-panel .psr-toggle svg { width: 14px; height: 14px; }
+      .psr-panel.is-expanded .psr-toggle {
+        transform: rotate(180deg);
+        background: rgba(201,168,76,0.16);
+      }
+
+      /* Expanded state */
+      .psr-panel.is-expanded {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        padding: 14px 16px 18px;
+        gap: 14px;
+        border-color: rgba(201,168,76,0.32);
+        background:
+          linear-gradient(165deg, rgba(201,168,76,0.07) 0%, rgba(201,168,76,0) 50%),
+          var(--obsidian-2);
+      }
+      .psr-panel.is-expanded .psr-visual {
+        grid-column: 1;
+        grid-row: 1;
+      }
+      .psr-panel.is-expanded .psr-img {
+        aspect-ratio: 16 / 10;
+        width: 100%;
+        max-height: 220px;
+      }
+      .psr-panel.is-expanded .psr-info {
+        grid-column: 1;
+        grid-row: 2;
+        gap: 14px;
+      }
+      .psr-panel.is-expanded .psr-eyebrow {
+        font-size: 0.66rem;
+        letter-spacing: 0.32em;
+        margin-bottom: 4px;
+      }
+      .psr-panel.is-expanded .psr-title {
+        font-size: 1.6rem;
+        line-height: 1.15;
+        white-space: normal;
+        overflow: visible;
+      }
+      .psr-panel.is-expanded .psr-desc {
+        display: block;
+        font-size: 0.92rem;
+        line-height: 1.65;
+        max-width: none;
+        margin: 0;
+      }
+      .psr-panel.is-expanded .psr-bullets {
+        display: block;
+        margin: 6px 0 0;
+        max-width: none;
+      }
+      .psr-panel.is-expanded .psr-bullets li {
+        padding: 9px 0 9px 22px;
+        font-size: 0.7rem;
+      }
+      .psr-panel.is-expanded .psr-cta {
+        display: inline-flex;
+        align-self: flex-start;
+        margin-top: 6px;
+        padding: 13px 22px;
+        font-size: 0.7rem;
+        min-height: 44px;
+      }
+      .psr-panel.is-expanded .psr-toggle {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        z-index: 2;
+        background: rgba(13,11,12,0.7);
+        backdrop-filter: blur(6px);
+        border-color: rgba(201,168,76,0.4);
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -3565,6 +3683,9 @@
               ${d.imgSrc ? `<img src="${d.imgSrc}" alt="${d.imgAlt}" loading="lazy">` : ''}
             </div>
           </div>
+          <button class="psr-toggle" type="button" aria-label="Show treatment details" aria-expanded="false">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg>
+          </button>
         `;
         frag.appendChild(panel);
 
@@ -3651,22 +3772,24 @@
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll);
 
-      // Mobile (≤900px): pinned scroll is disabled in CSS; reveal each panel via
-      // IntersectionObserver instead, so content fades up as it scrolls into view.
+      // Mobile (≤900px): pinned scroll is disabled; each panel is a compact
+      // tap-to-expand card. Click anywhere on the card (except the Book CTA)
+      // toggles `is-expanded` to reveal description / bullets / CTA inline.
       const isMobile = window.matchMedia('(max-width: 900px)');
-      function setupMobileReveals() {
+      function setupMobileTapToExpand() {
         if (!isMobile.matches) return;
-        const panelIO = new IntersectionObserver((entries) => {
-          entries.forEach(e => {
-            if (e.isIntersecting) {
-              e.target.classList.add('mobile-reveal');
-              panelIO.unobserve(e.target);
-            }
+        panels.forEach(panel => {
+          panel.addEventListener('click', (e) => {
+            // Don't toggle if user is clicking the book CTA — let the link work
+            if (e.target.closest('.psr-cta')) return;
+            const wasExpanded = panel.classList.contains('is-expanded');
+            panel.classList.toggle('is-expanded');
+            const toggleBtn = panel.querySelector('.psr-toggle');
+            if (toggleBtn) toggleBtn.setAttribute('aria-expanded', String(!wasExpanded));
           });
-        }, { threshold: 0.18, rootMargin: '0px 0px -10% 0px' });
-        panels.forEach(p => panelIO.observe(p));
+        });
       }
-      setupMobileReveals();
+      setupMobileTapToExpand();
 
       // Start with no panel active; first scroll into the track triggers panel 0's entry.
       requestAnimationFrame(update);
@@ -3698,7 +3821,7 @@
           rowIO.unobserve(e.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+    }, { threshold: 0.2, rootMargin: '0px 0px -18% 0px' });
 
     svcRows.forEach(r => rowIO.observe(r));
 
@@ -3729,7 +3852,7 @@
           revealIO.unobserve(e.target);
         }
       });
-    }, { threshold: 0.08 });
+    }, { threshold: 0.2, rootMargin: '0px 0px -15% 0px' });
     document.querySelectorAll('.reveal').forEach(el => revealIO.observe(el));
 
     // ---- [data-takeover] scroll-in reveals (about, why) ----
@@ -3740,7 +3863,7 @@
           takeoverIO.unobserve(e.target);
         }
       });
-    }, { threshold: 0.18, rootMargin: '0px 0px -10% 0px' });
+    }, { threshold: 0.25, rootMargin: '0px 0px -18% 0px' });
     document.querySelectorAll('[data-takeover]').forEach(el => takeoverIO.observe(el));
 
     // ---- Unified [data-stagger] section reveals ----
@@ -3756,7 +3879,7 @@
           staggerIO.unobserve(e.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    }, { threshold: 0.22, rootMargin: '0px 0px -18% 0px' });
     document.querySelectorAll('[data-stagger]').forEach(el => staggerIO.observe(el));
   </script>
 
