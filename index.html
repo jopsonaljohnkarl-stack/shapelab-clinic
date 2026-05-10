@@ -670,6 +670,76 @@
       max-width: 560px;
     }
 
+    /* ============ PROMISE STRIP — "what's included with your first visit" ============ */
+    .promise-strip {
+      background: var(--obsidian);
+      border-top: 1px solid rgba(201,168,76,0.1);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+      padding: 22px 56px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      position: relative;
+    }
+    .promise-strip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 100% at 50% 50%, rgba(201,168,76,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .promise-cell {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+    .promise-cell + .promise-cell {
+      border-left: 1px solid rgba(201,168,76,0.08);
+      padding-left: 24px;
+    }
+    .promise-icon {
+      flex-shrink: 0;
+      width: 34px; height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(201,168,76,0.32);
+      color: var(--gold);
+    }
+    .promise-icon svg { width: 16px; height: 16px; }
+    .promise-text { display: flex; flex-direction: column; gap: 2px; }
+    .promise-eyebrow {
+      font-size: 0.6rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.85;
+    }
+    .promise-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--warm-white);
+      line-height: 1.3;
+      letter-spacing: 0.01em;
+    }
+    @media (max-width: 900px) {
+      .promise-strip {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+        padding: 22px 24px;
+      }
+      .promise-cell + .promise-cell { border-left: none; padding-left: 0; }
+      .promise-cell:nth-child(even) { border-left: 1px solid rgba(201,168,76,0.08); padding-left: 18px; }
+    }
+    @media (max-width: 480px) {
+      .promise-strip { grid-template-columns: 1fr; }
+      .promise-cell:nth-child(even) { border-left: none; padding-left: 0; }
+      .promise-cell + .promise-cell { border-top: 1px solid rgba(201,168,76,0.08); padding-top: 14px; }
+    }
+
     /* ============ DOCTOR / MEET YOUR DOCTOR ============ */
     #doctor {
       background: var(--obsidian);
@@ -2282,7 +2352,45 @@
     </div>
   </section>
 
-  <div class="shimmer-bar"></div>
+  <!-- ===== PROMISE STRIP — your first visit, on the house ===== -->
+  <div class="promise-strip" data-stagger data-stagger-tight aria-label="What's included with your first visit">
+    <div class="promise-cell">
+      <span class="promise-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </span>
+      <span class="promise-text">
+        <span class="promise-eyebrow">No charge</span>
+        <span class="promise-label">Free Initial Consultation</span>
+      </span>
+    </div>
+    <div class="promise-cell">
+      <span class="promise-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </span>
+      <span class="promise-text">
+        <span class="promise-eyebrow">Yours alone</span>
+        <span class="promise-label">Personalised Treatment Plan</span>
+      </span>
+    </div>
+    <div class="promise-cell">
+      <span class="promise-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3M5 9h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2zM12 13v4M10 15h4"/></svg>
+      </span>
+      <span class="promise-text">
+        <span class="promise-eyebrow">Doctor-led</span>
+        <span class="promise-label">UK-Registered Care</span>
+      </span>
+    </div>
+    <div class="promise-cell">
+      <span class="promise-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+      </span>
+      <span class="promise-text">
+        <span class="promise-eyebrow">Included</span>
+        <span class="promise-label">Body Composition Analysis</span>
+      </span>
+    </div>
+  </div>
 
   <!-- ===== ABOUT BAND ===== -->
   <section id="about" data-stagger data-takeover>
