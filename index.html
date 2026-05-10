@@ -2622,6 +2622,86 @@
     ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.25); }
     ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
+    /* Footer privacy link styling — keep subtle */
+    .footer-legal {
+      color: rgba(245,237,224,0.55);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+      padding-bottom: 1px;
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+    .footer-legal:hover { color: var(--gold); border-bottom-color: var(--gold); }
+
+    /* ============ COOKIE CONSENT BANNER ============ */
+    .cookie-banner {
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+      z-index: 460;
+      padding: 16px 18px;
+      background: rgba(13, 11, 12, 0.94);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(201, 168, 76, 0.25);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .cookie-banner.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    body.intro-active .cookie-banner { opacity: 0 !important; pointer-events: none !important; }
+    .cookie-banner-text {
+      flex: 1;
+      font-size: 0.74rem;
+      line-height: 1.55;
+      color: rgba(245, 237, 224, 0.78);
+    }
+    .cookie-banner-text a {
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.4);
+      padding-bottom: 1px;
+    }
+    .cookie-banner-text a:hover { border-bottom-color: var(--gold); }
+    .cookie-banner-btn {
+      flex-shrink: 0;
+      padding: 9px 18px;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--obsidian);
+      background: linear-gradient(135deg, #c9a84c 0%, #e0c472 100%);
+      border: none;
+      cursor: pointer;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+    }
+    .cookie-banner-btn:hover {
+      box-shadow: 0 6px 18px rgba(201, 168, 76, 0.3);
+      transform: translateY(-1px);
+    }
+    @media (max-width: 480px) {
+      .cookie-banner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 14px 16px;
+      }
+      .cookie-banner-btn { width: 100%; padding: 11px 18px; }
+      .cookie-banner-text { font-size: 0.72rem; }
+    }
+
     /* ============ FLOATING MOBILE CTAs (Book + WhatsApp) ============ */
     .floating-actions {
       display: none; /* hidden by default; only shown on mobile via media query */
@@ -3467,10 +3547,18 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <div class="footer-copy">© 2025 ShapeLab Aesthetic Clinic. All rights reserved.</div>
+      <div class="footer-copy">© 2025 ShapeLab Aesthetic Clinic. All rights reserved. · <a href="/privacy.html" class="footer-legal">Privacy Policy</a></div>
       <div class="footer-loc">Puerto Princesa City, Palawan, Philippines</div>
     </div>
   </footer>
+
+  <!-- ===== COOKIE CONSENT BANNER ===== -->
+  <div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookie notice">
+    <span class="cookie-banner-text">
+      We use essential cookies and embedded services (Google Maps, Google Fonts) to run this site. <a href="/privacy.html">Privacy policy</a>.
+    </span>
+    <button type="button" class="cookie-banner-btn" id="cookieAck">Got it</button>
+  </div>
 
   <!-- ===== FLOATING MOBILE CTAs ===== -->
   <div class="floating-actions" id="floatingActions" aria-label="Quick actions">
@@ -3503,6 +3591,23 @@
   </div>
 
   <script>
+    // ---- Cookie consent banner ----
+    (function initCookieBanner() {
+      const banner = document.getElementById('cookieBanner');
+      if (!banner) return;
+      const KEY = 'shapelab.cookieAcked.v1';
+      try {
+        if (localStorage.getItem(KEY) === '1') return; // already dismissed
+      } catch (_) { /* private mode etc. */ }
+      // Show after intro flight finishes (~6s) so it doesn't compete with the logo reveal.
+      setTimeout(() => banner.classList.add('show'), 6500);
+      document.getElementById('cookieAck')?.addEventListener('click', () => {
+        banner.classList.remove('show');
+        try { localStorage.setItem(KEY, '1'); } catch (_) {}
+        setTimeout(() => banner.remove(), 600);
+      });
+    })();
+
     // ---- Map modal (in-page Google Maps popup) ----
     function openMapModal() {
       const modal = document.getElementById('mapModal');
