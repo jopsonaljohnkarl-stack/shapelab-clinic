@@ -100,6 +100,9 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+    /* In-page anchor links land below the fixed banner + navbar instead of underneath. */
+    #about, #doctor, #services, #why, #consult, #contact { scroll-margin-top: 110px; }
+    @media (max-width: 768px) { #about, #doctor, #services, #why, #consult, #contact { scroll-margin-top: 96px; } }
 
     body {
       background: var(--obsidian);
@@ -2820,7 +2823,7 @@
     <div class="footer-top" data-stagger data-stagger-tight>
       <div>
         <a class="footer-logo" href="#" aria-label="ShapeLab Aesthetic Clinic — back to top" onclick="event.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' });">
-          <img src="brandassets/brand logo.jpg" alt="ShapeLab Aesthetic Clinic">
+          <img src="brandassets/brand logo.jpg" alt="ShapeLab Aesthetic Clinic" loading="lazy" decoding="async">
         </a>
         <p class="footer-tagline">
           "Subtle changes.<br><em>Real results.</em>"
