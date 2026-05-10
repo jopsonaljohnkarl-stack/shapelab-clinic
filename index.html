@@ -802,32 +802,6 @@
       background: linear-gradient(180deg, transparent 55%, rgba(13,11,12,0.45) 100%);
       pointer-events: none;
     }
-    .doctor-credline {
-      position: absolute;
-      left: 16px;
-      bottom: 18px;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 14px;
-      background: rgba(13,11,12,0.65);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(201,168,76,0.32);
-      font-size: 0.62rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--warm-white);
-      z-index: 2;
-    }
-    .doctor-credline::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 10px rgba(201,168,76,0.6);
-    }
-
     .doctor-info { position: relative; max-width: 620px; }
     .doctor-info .section-label {
       display: inline-flex;
@@ -1900,21 +1874,6 @@
       mix-blend-mode: multiply;
       pointer-events: none;
     }
-    .psr-img-tag {
-      position: absolute;
-      bottom: 16px;
-      left: 16px;
-      font-size: 0.6rem;
-      letter-spacing: 0.34em;
-      text-transform: uppercase;
-      color: var(--cream);
-      background: rgba(13,11,12,0.6);
-      backdrop-filter: blur(6px);
-      padding: 7px 14px;
-      border: 1px solid rgba(201,168,76,0.18);
-      z-index: 2;
-    }
-
     @media (max-width: 900px) {
       /* Mobile: drop the pinned-storytelling pattern entirely. Pinned scroll fights
          with mobile chrome (URL bar resizing, soft keyboard, viewport math), and the
@@ -2282,7 +2241,7 @@
       </svg>
     </a>
     <ul class="nav-links">
-      <li><a href="#doctor">Doctor</a></li>
+      <li><a href="#doctor">Meet Your Doctor</a></li>
       <li><a href="#services">Services</a></li>
       <li><a href="#why">Why Us</a></li>
       <li><a href="#consult">Consult</a></li>
@@ -2413,10 +2372,9 @@
     <div class="doctor-frame">
       <div class="doctor-img">
         <img src="brandassets/doctor.jpg" alt="Dr. Katherine E. Hernandez — UK-registered medical doctor" loading="lazy">
-        <span class="doctor-credline">Dr. Katherine E. Hernandez</span>
       </div>
     </div>
-    <div class="doctor-info">
+    <div class="doctor-info" data-stagger>
       <div class="section-label">Meet Your Doctor</div>
       <h2 class="doctor-name">Dr. Katherine E. <em>Hernandez</em></h2>
       <p class="doctor-subtitle">Where science meets artistry — UK-registered medical doctor &amp; aesthetic medicine specialist.</p>
@@ -3073,7 +3031,6 @@
           <div class="psr-visual">
             <div class="psr-img">
               ${d.imgSrc ? `<img src="${d.imgSrc}" alt="${d.imgAlt}" loading="lazy">` : ''}
-              <div class="psr-img-tag">${d.tag}</div>
             </div>
           </div>
         `;
