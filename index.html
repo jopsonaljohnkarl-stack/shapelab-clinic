@@ -1,0 +1,2761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShapeLab Aesthetic Clinic — Puerto Princesa City</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #e0c472;
+      --gold-pale: #f0dfa0;
+      --gold-dark: #9a7835;
+      --obsidian: #0d0b0c;
+      --obsidian-2: #141012;
+      --obsidian-3: #1c181a;
+      --cream: #f5ede0;
+      --cream-2: #ece0cf;
+      --warm-white: #fdf8f3;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--obsidian);
+      color: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Grain overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0.028;
+      mix-blend-mode: overlay;
+    }
+
+    .font-display { font-family: 'Cormorant Garamond', serif; }
+
+    /* Gold gradient text */
+    .gold-grad {
+      background: linear-gradient(135deg, #b8963e 0%, #e8d080 45%, #c9a84c 70%, #9a7835 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ============ INTRO OVERLAY ============ */
+    body.intro-active {
+      overflow: hidden;
+      height: 100vh;
+    }
+    #intro {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: var(--obsidian);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: transform 1.4s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.7s ease 0.5s;
+    }
+    #intro.exit {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    #intro.flying .intro-bg-glow,
+    #intro.flying .intro-sparkles,
+    #intro.flying .intro-tagline {
+      transition: opacity 0.55s ease;
+      opacity: 0 !important;
+      pointer-events: none;
+    }
+    #intro.flying {
+      background: transparent;
+      transition: background 0.6s ease 0.2s;
+    }
+    /* Atmospheric gold glow */
+    .intro-bg-glow {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 50%, rgba(201,168,76,0.09) 0%, transparent 60%),
+        radial-gradient(ellipse 90% 35% at 50% 50%, rgba(201,168,76,0.05) 0%, transparent 70%),
+        radial-gradient(ellipse 100% 100% at 50% 50%, var(--obsidian-2) 0%, var(--obsidian) 100%);
+      animation: introGlow 5s ease-in-out infinite alternate;
+    }
+    @keyframes introGlow {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.08); opacity: 0.85; }
+    }
+    /* Decorative floating sparkles */
+    .intro-sparkles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      animation: introFade 1.2s ease 1.6s forwards;
+    }
+    .intro-sparkles svg { width: 100%; height: 100%; }
+    .sparkle {
+      animation: sparkleFloat 4s ease-in-out infinite;
+    }
+    @keyframes sparkleFloat {
+      0%, 100% { opacity: 0.2; transform: translateY(0); }
+      50% { opacity: 0.9; transform: translateY(-8px); }
+    }
+
+    .intro-content {
+      position: relative;
+      text-align: center;
+      z-index: 2;
+      padding: 0 24px;
+      max-width: 100%;
+    }
+    .intro-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 56px;
+      opacity: 0;
+      animation: introFade 1s ease 0.2s forwards;
+    }
+    .intro-eyebrow::before, .intro-eyebrow::after {
+      content: '';
+      display: block;
+      width: 36px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    /* The big logo (inline SVG) */
+    .intro-logo {
+      position: relative;
+      width: clamp(360px, 62vw, 720px);
+      margin: 0 auto 28px;
+      opacity: 0;
+      transform: scale(0.96);
+      filter: blur(8px);
+      animation: introLogoIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+      will-change: transform, opacity, filter;
+    }
+    .intro-logo .sl-logo {
+      width: 100%;
+      height: auto;
+      display: block;
+      overflow: visible;
+    }
+    @keyframes introLogoIn {
+      0%   { opacity: 0; transform: scale(0.96); filter: blur(8px); }
+      60%  { filter: blur(0); }
+      100% { opacity: 1; transform: scale(1); filter: blur(0); }
+    }
+
+    /* ---- SVG inner animations ---- */
+    .sl-logo #emblem-box {
+      transform-box: fill-box;
+      transform-origin: center;
+      opacity: 0;
+      transform: scale(0.94);
+      animation: slEmblemBox 1.0s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+    }
+    @keyframes slEmblemBox {
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .sl-logo #emblem-s,
+    .sl-logo #emblem-l {
+      transform-box: fill-box;
+      transform-origin: center;
+      opacity: 0;
+    }
+    .sl-logo #emblem-s {
+      animation: slEmblemS 1.7s cubic-bezier(0.4, 0, 0.2, 1) 0.85s forwards;
+    }
+    .sl-logo #emblem-l {
+      animation: slEmblemL 1.7s cubic-bezier(0.4, 0, 0.2, 1) 0.85s forwards;
+    }
+    @keyframes slEmblemS {
+      0%   { opacity: 0; transform: translateX(0); }
+      30%  { opacity: 1; transform: translateX(-12px); }
+      62%  { transform: translateX(-12px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slEmblemL {
+      0%   { opacity: 0; transform: translateX(0); }
+      30%  { opacity: 1; transform: translateX(12px); }
+      62%  { transform: translateX(12px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+
+    .sl-logo #divider {
+      transform-box: fill-box;
+      transform-origin: center;
+      transform: scaleY(0);
+      opacity: 0;
+      animation: slDivider 0.75s cubic-bezier(0.7, 0, 0.2, 1) 2.05s forwards;
+    }
+    @keyframes slDivider {
+      to { transform: scaleY(1); opacity: 1; }
+    }
+
+    .sl-logo #wordmark { opacity: 1; }
+    .sl-logo #shape-text {
+      clip-path: url(#shapeRevealClip);
+    }
+    .sl-logo #shapeRevealRect {
+      transform-origin: 0 0;
+      transform: scaleX(0);
+      animation: slShapeReveal 1.1s cubic-bezier(0.7, 0, 0.2, 1) 2.35s forwards;
+    }
+    @keyframes slShapeReveal {
+      to { transform: scaleX(1); }
+    }
+
+    .sl-logo #lab-block {
+      transform-box: fill-box;
+      transform-origin: center;
+      opacity: 0;
+      transform: scale(0.85);
+      animation: slLab 0.75s cubic-bezier(0.16, 1, 0.3, 1) 3.0s forwards;
+    }
+    @keyframes slLab {
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Hero tagline (HTML, below SVG) */
+    .intro-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(1.05rem, 1.8vw, 1.5rem);
+      letter-spacing: 0.18em;
+      text-transform: none;
+      text-align: center;
+      background: linear-gradient(135deg, #b8963e 0%, #e8d080 50%, #c9a84c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: introFadeUp 1.0s cubic-bezier(0.16, 1, 0.3, 1) 3.55s forwards;
+    }
+    .intro-tagline {
+      white-space: nowrap;
+      padding: 0 16px;
+    }
+    .intro-tagline::before,
+    .intro-tagline::after {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+      vertical-align: middle;
+      margin: 0 12px;
+      opacity: 0.55;
+    }
+    @media (max-width: 540px) {
+      .intro-tagline {
+        font-size: 0.82rem;
+        letter-spacing: 0.14em;
+      }
+      .intro-tagline::before,
+      .intro-tagline::after { width: 16px; margin: 0 8px; }
+    }
+    @keyframes introFade {
+      to { opacity: 1; }
+    }
+    @keyframes introFadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============ TOP BANNER ============ */
+    #top-banner {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 480;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(8, 7, 8, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+      font-size: 0.62rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(245,237,224,0.55);
+      gap: 12px;
+    }
+    #top-banner .dot {
+      width: 4px;
+      height: 4px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(201,168,76,0.55);
+    }
+    #top-banner em {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      font-size: 0.78rem;
+      background: linear-gradient(135deg, #b8963e 0%, #e8d080 50%, #c9a84c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    @media (max-width: 540px) {
+      #top-banner { font-size: 0.54rem; letter-spacing: 0.22em; gap: 8px; }
+      #top-banner em { font-size: 0.7rem; }
+    }
+
+    /* ============ NAV ============ */
+    #navbar {
+      position: fixed;
+      top: 28px; left: 0; right: 0;
+      z-index: 500;
+      padding: 20px 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.5s ease, border-color 0.5s ease;
+      border-bottom: 1px solid transparent;
+    }
+
+    #navbar.scrolled {
+      background: rgba(13,11,12,0.96);
+      backdrop-filter: blur(20px);
+      border-bottom-color: rgba(201,168,76,0.1);
+    }
+
+    .nav-logo {
+      display: inline-flex;
+      align-items: center;
+      line-height: 0;
+    }
+    .nav-logo .sl-logo {
+      height: 56px;
+      width: auto;
+      display: block;
+      transition: filter 0.3s ease;
+      filter: drop-shadow(0 2px 14px rgba(201,168,76,0.18));
+    }
+    .nav-logo:hover .sl-logo { filter: drop-shadow(0 2px 18px rgba(201,168,76,0.32)); }
+    .nav-logo {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease 0.05s;
+    }
+    .nav-logo.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245,237,224,0.6);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    .nav-book {
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--obsidian);
+      background: linear-gradient(135deg, #c9a84c 0%, #e0c472 100%);
+      padding: 11px 28px;
+      text-decoration: none;
+      display: inline-block;
+      transition: box-shadow 0.3s, transform 0.3s;
+      box-shadow: 0 4px 20px rgba(201,168,76,0.22);
+    }
+    .nav-book:hover {
+      box-shadow: 0 8px 32px rgba(201,168,76,0.4);
+      transform: translateY(-1px);
+    }
+    .nav-book:active { transform: translateY(0); }
+
+    /* ============ HERO ============ */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 75% 55% at 95% 85%, rgba(201,168,76,0.08) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 5% 15%, rgba(201,168,76,0.055) 0%, transparent 50%),
+        radial-gradient(ellipse 100% 70% at 50% 50%, rgba(20,16,18,1) 0%, rgba(13,11,12,1) 100%);
+    }
+
+    /* Animated decorative lines */
+    .hero-deco {
+      position: absolute;
+      right: -2%;
+      top: 0;
+      bottom: 0;
+      width: 58%;
+      pointer-events: none;
+    }
+
+    .hero-deco svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .deco-path {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: drawLine 2.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .deco-path:nth-child(2) { animation-delay: 0.3s; }
+    .deco-path:nth-child(3) { animation-delay: 0.6s; }
+    .deco-path:nth-child(4) { animation-delay: 0.9s; }
+    .deco-circle { animation: fadeIn 1s ease 1.2s both; }
+
+    @keyframes drawLine {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 56px;
+      padding-top: 100px;
+      max-width: 700px;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: slideUp 0.8s ease 0.2s both;
+    }
+    .hero-eyebrow-line {
+      display: block;
+      width: 36px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.8rem, 7.5vw, 7rem);
+      font-weight: 300;
+      line-height: 0.97;
+      letter-spacing: -0.025em;
+      color: var(--warm-white);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: slideUp 0.9s ease 0.38s both;
+    }
+
+    .hero-title .italic-gold {
+      font-style: italic;
+      font-weight: 400;
+      background: linear-gradient(135deg, #b8963e 0%, #e8d080 45%, #c9a84c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-body {
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+      font-weight: 400;
+      line-height: 1.7;
+      color: rgba(245,237,224,0.78);
+      max-width: 540px;
+      margin-bottom: 44px;
+      opacity: 0;
+      animation: slideUp 0.9s ease 0.55s both;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 16px;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      margin-bottom: 88px; /* lift the buttons clear of the stats divider line below */
+      opacity: 0;
+      animation: slideUp 0.9s ease 0.7s both;
+    }
+    .btn-gold,
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      font-size: 0.74rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 16px 34px;
+      min-height: 52px;
+      text-decoration: none;
+    }
+    .btn-gold {
+      color: #0d0b0c;
+      background: linear-gradient(135deg, #c9a84c 0%, #e0c472 100%);
+      border: 1px solid transparent;
+      transition: box-shadow 0.3s, transform 0.3s;
+      box-shadow: 0 6px 28px rgba(201,168,76,0.3), 0 2px 8px rgba(201,168,76,0.15);
+    }
+    .btn-gold:hover {
+      box-shadow: 0 10px 40px rgba(201,168,76,0.45), 0 4px 14px rgba(201,168,76,0.2);
+      transform: translateY(-2px);
+    }
+    .btn-gold:active { transform: translateY(0); }
+
+    .btn-ghost {
+      color: rgba(245,237,224,0.85);
+      background: transparent;
+      border: 1px solid rgba(201,168,76,0.4);
+      transition: border-color 0.3s, color 0.3s, background 0.3s;
+    }
+    .btn-ghost:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(201,168,76,0.04);
+    }
+
+    /* Stats strip */
+    .hero-stats {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid rgba(201,168,76,0.1);
+      background: rgba(13,11,12,0.65);
+      backdrop-filter: blur(16px);
+      opacity: 0;
+      animation: slideUp 0.9s ease 0.9s both;
+    }
+
+    .stat-cell {
+      padding: 22px 40px;
+      border-right: 1px solid rgba(201,168,76,0.08);
+    }
+    .stat-cell:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-lbl {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(245,237,224,0.5);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============ SHIMMER DIVIDER ============ */
+    .shimmer-bar {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--gold-dark) 20%, var(--gold-light) 50%, var(--gold-dark) 80%, transparent 100%);
+      background-size: 200% auto;
+      animation: shimmerMove 4s linear infinite;
+    }
+    @keyframes shimmerMove {
+      0% { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+
+    /* ============ ABOUT BAND ============ */
+    #about {
+      background: var(--obsidian-2);
+      padding: 80px 56px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.9rem, 3.5vw, 3rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.28;
+      color: var(--warm-white);
+      position: relative;
+      padding-left: 32px;
+    }
+    .about-quote::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 8px; bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+    }
+    .about-quote em { color: var(--gold); font-style: italic; }
+
+    .about-right {}
+    .about-lbl {
+      font-size: 0.72rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 22px;
+    }
+    .about-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 400;
+      color: var(--warm-white);
+      margin-bottom: 22px;
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+    }
+    .about-text {
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+      font-weight: 400;
+      line-height: 1.75;
+      color: rgba(245,237,224,0.74);
+      max-width: 560px;
+    }
+
+    /* ============ SERVICES (vertical scroll-reveal rows) ============ */
+    #services {
+      background: var(--obsidian);
+      position: relative;
+      padding: 120px 0 60px;
+      overflow: clip; /* clip instead of hidden so position:sticky works in descendants */
+    }
+    /* Decorative floating gold orbs */
+    #services::before, #services::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    #services::before {
+      top: 30%;
+      left: -300px;
+      background: radial-gradient(circle, rgba(201,168,76,0.06), transparent 70%);
+    }
+    #services::after {
+      top: 70%;
+      right: -300px;
+      background: radial-gradient(circle, rgba(201,168,76,0.04), transparent 70%);
+    }
+
+    .services-intro {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 48px;
+      padding: 0 32px;
+      position: relative;
+      z-index: 2;
+    }
+    .services-intro .section-label {
+      justify-content: center;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .services-intro .section-label::before,
+    .services-intro .section-label::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--warm-white);
+      margin-bottom: 0;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+
+    /* ---- Vertical service rows ---- */
+    .svc-rows {
+      position: relative;
+      z-index: 2;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 56px;
+    }
+    .svc-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      padding: 90px 0;
+      min-height: 88vh;
+      position: relative;
+    }
+    .svc-row[data-side="right"] .svc-row-frame { order: 2; }
+    .svc-row[data-side="right"] .svc-row-info  { order: 1; align-items: flex-end; text-align: right; }
+
+    /* Frame (image side) — entrance animation */
+    .svc-row-frame {
+      position: relative;
+      opacity: 0;
+      transform: scale(0.92) translateY(36px);
+      transition:
+        opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform, opacity;
+    }
+    .svc-row[data-side="right"] .svc-row-frame {
+      transform: scale(0.92) translateY(36px);
+    }
+    .svc-row.in .svc-row-frame {
+      opacity: 1;
+      transform: scale(1) translateY(0) rotateZ(0);
+    }
+
+    .svc-row-img-wrap {
+      position: relative;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      background: var(--obsidian-2);
+      border: 1px solid rgba(201,168,76,0.08);
+    }
+    .svc-row-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(140deg, transparent 30%, rgba(13,11,12,0.45) 100%);
+      pointer-events: none;
+      mix-blend-mode: multiply;
+    }
+    .svc-row-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover;
+      transform: scale(1.1);
+      transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      filter: brightness(0.92) saturate(0.95);
+    }
+    .svc-row.in .svc-row-img-wrap img { transform: scale(1); }
+
+    /* Big numeric badge */
+    .svc-row-num {
+      position: absolute;
+      top: -36px;
+      left: -28px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 6vw, 5rem);
+      font-weight: 300;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(201,168,76,0.55);
+      z-index: 3;
+      opacity: 0;
+      transform: translate(-8px, 8px);
+      transition: opacity 0.5s ease 0.12s, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
+    }
+    .svc-row[data-side="right"] .svc-row-num {
+      left: auto; right: -28px;
+      transform: translate(8px, 8px);
+    }
+    .svc-row.in .svc-row-num {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+
+    /* Info side */
+    .svc-row-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 22px;
+      position: relative;
+    }
+
+    .svc-row-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding: 7px 14px;
+      border: 1px solid rgba(201,168,76,0.4);
+      opacity: 0;
+      transform: translateX(-18px);
+      transition: opacity 0.45s ease 0.08s, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.08s;
+    }
+    .svc-row[data-side="right"] .svc-row-tag { transform: translateX(18px); }
+    .svc-row.in .svc-row-tag { opacity: 1; transform: translateX(0); }
+
+    /* Name with clip-path wipe up */
+    .svc-row-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 6.2vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: var(--warm-white);
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path 0.7s cubic-bezier(0.7, 0, 0.3, 1) 0.18s;
+    }
+    .svc-row-name em {
+      font-style: italic;
+      background: linear-gradient(135deg, #b8963e 0%, #e8d080 50%, #c9a84c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .svc-row.in .svc-row-name { clip-path: inset(0 0 0 0); }
+
+    .svc-row-desc {
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.85;
+      color: rgba(245,237,224,0.55);
+      max-width: 460px;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.28s, transform 0.55s cubic-bezier(0.22,1,0.36,1) 0.28s;
+    }
+    .svc-row.in .svc-row-desc { opacity: 1; transform: translateY(0); }
+
+    .svc-row-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      padding: 14px 30px;
+      border: 1px solid rgba(201,168,76,0.4);
+      background: transparent;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(14px);
+      transition:
+        opacity 0.45s ease 0.36s,
+        transform 0.55s cubic-bezier(0.22,1,0.36,1) 0.36s,
+        background 0.3s,
+        border-color 0.3s,
+        box-shadow 0.3s;
+    }
+    .svc-row-link .arr {
+      transition: transform 0.3s;
+    }
+    .svc-row-link:hover {
+      background: linear-gradient(135deg, #c9a84c, #e0c472);
+      border-color: var(--gold);
+      color: var(--obsidian);
+      box-shadow: 0 8px 32px rgba(201,168,76,0.28);
+    }
+    .svc-row-link:hover .arr { transform: translateX(5px); }
+    .svc-row.in .svc-row-link { opacity: 1; transform: translateY(0); }
+
+    /* Filter tabs (kept for category filtering) */
+    .services-filter {
+      display: flex;
+      justify-content: center;
+      margin-top: 24px;
+      margin-bottom: 24px;
+    }
+    .filter-row {
+      display: flex;
+      border: 1px solid rgba(201,168,76,0.18);
+    }
+    .ftab {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 10px 18px;
+      background: transparent;
+      border: none;
+      border-right: 1px solid rgba(201,168,76,0.18);
+      color: rgba(245,237,224,0.38);
+      cursor: pointer;
+      transition: background 0.25s, color 0.25s;
+    }
+    .ftab:last-child { border-right: none; }
+    .ftab.on, .ftab:hover {
+      background: rgba(201,168,76,0.1);
+      color: var(--gold);
+    }
+
+    /* ---- Marquee ticker ---- */
+    .svc-marquee {
+      overflow: hidden;
+      margin-bottom: 56px;
+      border-top: 1px solid rgba(201,168,76,0.1);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+      padding: 13px 0;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+    .svc-marquee-track {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      white-space: nowrap;
+      width: max-content;
+      animation: mqScroll 36s linear infinite;
+      will-change: transform;
+    }
+    .svc-marquee:hover .svc-marquee-track { animation-play-state: paused; }
+    .mq-item {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.04em;
+      color: rgba(245,237,224,0.3);
+      flex-shrink: 0;
+      cursor: default;
+      transition: color 0.35s, opacity 0.35s;
+    }
+    .mq-item:hover { color: var(--gold); opacity: 1; }
+    .mq-sep {
+      font-size: 0.45rem;
+      color: var(--gold);
+      opacity: 0.45;
+      flex-shrink: 0;
+    }
+    @keyframes mqScroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* (Old card styles removed — using vertical .svc-row layout) */
+
+    /* ============ WHY ============ */
+    #why {
+      padding: 112px 56px;
+      background: var(--obsidian-2);
+      position: relative;
+      overflow: hidden;
+    }
+    #why::before {
+      content: '';
+      position: absolute;
+      top: -160px; right: -160px;
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.045) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+      margin-top: 64px;
+    }
+
+    .why-card {
+      background: rgba(255,255,255,0.018);
+      border: 1px solid rgba(201,168,76,0.07);
+      padding: 44px 40px;
+      transition: border-color 0.4s, background 0.4s;
+    }
+    .why-card:hover {
+      border-color: rgba(201,168,76,0.18);
+      background: rgba(201,168,76,0.025);
+    }
+
+    .why-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 300;
+      line-height: 1;
+      color: rgba(201,168,76,0.12);
+      margin-bottom: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    .why-icon {
+      width: 44px; height: 44px;
+      margin-bottom: 24px;
+      color: var(--gold);
+    }
+
+    .why-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 2.2vw, 2rem);
+      font-weight: 400;
+      color: var(--warm-white);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .why-text {
+      font-size: clamp(0.95rem, 1.05vw, 1.05rem);
+      font-weight: 400;
+      line-height: 1.75;
+      color: rgba(245,237,224,0.7);
+    }
+
+    /* ============ CONSULTATION BAND ============ */
+    #consult {
+      padding: 96px 56px;
+      background: var(--obsidian-3);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 64px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    #consult::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 70% at 0% 50%, rgba(201,168,76,0.055) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 60% at 100% 50%, rgba(201,168,76,0.04) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .consult-text { position: relative; }
+    .consult-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.6rem);
+      font-weight: 300;
+      color: var(--warm-white);
+      line-height: 1.08;
+      margin-bottom: 18px;
+    }
+    .consult-heading em { font-style: italic; color: var(--gold); }
+    .consult-sub {
+      font-size: clamp(1rem, 1.15vw, 1.1rem);
+      font-weight: 400;
+      line-height: 1.75;
+      color: rgba(245,237,224,0.72);
+      max-width: 580px;
+    }
+    .consult-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .consult-note {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: rgba(245,237,224,0.45);
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    /* ============ CONTACT / FOOTER ============ */
+    footer {
+      background: var(--obsidian);
+      border-top: 1px solid rgba(201,168,76,0.1);
+      padding: 80px 56px 44px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.2fr;
+      gap: 52px;
+      margin-bottom: 64px;
+    }
+
+    .footer-logo {
+      display: inline-block;
+      margin-bottom: 18px;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), filter 0.4s ease;
+      cursor: pointer;
+    }
+    .footer-logo:hover { transform: translateY(-2px); filter: drop-shadow(0 4px 18px rgba(201,168,76,0.25)); }
+    .footer-logo img {
+      height: 54px;
+      object-fit: contain;
+      object-position: left center;
+      display: block;
+    }
+    .footer-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-style: italic;
+      line-height: 1.65;
+      color: rgba(245,237,224,0.35);
+    }
+    .footer-tagline em { color: var(--gold); font-style: italic; }
+
+    .footer-col-title {
+      font-size: 0.62rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .footer-list { list-style: none; }
+    .footer-list li { margin-bottom: 9px; }
+    .footer-list a {
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: rgba(245,237,224,0.48);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-list a:hover { color: var(--gold); }
+
+    .contact-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 13px;
+      font-size: 0.78rem;
+      font-weight: 300;
+      line-height: 1.55;
+      color: rgba(245,237,224,0.48);
+    }
+    .contact-row svg { color: var(--gold); flex-shrink: 0; margin-top: 2px; }
+    .contact-row a { color: rgba(245,237,224,0.48); text-decoration: none; transition: color 0.3s; }
+    .contact-row a:hover { color: var(--gold); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(201,168,76,0.07);
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy {
+      font-size: 0.68rem;
+      font-weight: 300;
+      color: rgba(245,237,224,0.22);
+      letter-spacing: 0.04em;
+    }
+    /* ============ MAP MODAL ============ */
+    .map-trigger {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+      text-align: left;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+    .map-trigger:hover { color: var(--gold); }
+    .map-trigger::after {
+      content: '↗';
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 0.7em;
+      color: var(--gold);
+      opacity: 0.7;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .map-trigger:hover::after { transform: translate(2px, -2px); opacity: 1; }
+
+    .map-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      background: rgba(8, 7, 8, 0);
+      backdrop-filter: blur(0px);
+      transition: background 0.4s ease, backdrop-filter 0.4s ease;
+    }
+    .map-modal.is-open {
+      display: flex;
+      background: rgba(8, 7, 8, 0.78);
+      backdrop-filter: blur(14px);
+    }
+    .map-modal-card {
+      position: relative;
+      width: min(960px, 92vw);
+      height: min(640px, 82vh);
+      background: var(--obsidian-2);
+      border: 1px solid rgba(201,168,76,0.22);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 60px rgba(201,168,76,0.08);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(20px) scale(0.97);
+      transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .map-modal.is-open .map-modal-card {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .map-modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 28px;
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+      background: linear-gradient(180deg, rgba(201,168,76,0.04) 0%, transparent 100%);
+      gap: 16px;
+    }
+    .map-modal-head .label {
+      font-size: 0.66rem;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .map-modal-head .title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+      font-weight: 400;
+      color: var(--warm-white);
+      line-height: 1.2;
+    }
+    .map-modal-close {
+      flex-shrink: 0;
+      width: 38px; height: 38px;
+      border: 1px solid rgba(201,168,76,0.3);
+      background: transparent;
+      color: var(--cream);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s, border-color 0.3s, color 0.3s, transform 0.3s;
+    }
+    .map-modal-close:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--obsidian);
+      transform: rotate(90deg);
+    }
+    .map-modal-body {
+      position: relative;
+      flex: 1 1 auto;
+      background: var(--obsidian-3);
+    }
+    .map-modal-body iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      filter: grayscale(0.25) contrast(1.05);
+    }
+    .map-modal-foot {
+      padding: 14px 28px;
+      border-top: 1px solid rgba(201,168,76,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245,237,224,0.6);
+    }
+    .map-modal-foot a {
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(201,168,76,0.3);
+      padding-bottom: 2px;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .map-modal-foot a:hover { border-color: var(--gold); }
+    @media (max-width: 540px) {
+      .map-modal { padding: 16px; }
+      .map-modal-card { height: min(560px, 80vh); }
+      .map-modal-head { padding: 16px 18px; }
+      .map-modal-foot { padding: 12px 18px; font-size: 0.6rem; letter-spacing: 0.16em; }
+    }
+
+    .footer-loc {
+      font-size: 0.65rem;
+      color: rgba(245,237,224,0.16);
+      letter-spacing: 0.04em;
+    }
+
+    /* ============ PINNED SCROLL-STORYTELLING (PSR) ============ */
+    /* Hide the old vertical service rows + filter once the pinned section is active. */
+    body.psr-active #services .svc-rows,
+    body.psr-active #services .services-filter { display: none; }
+
+    .psr-track {
+      position: relative;
+      /* ~80vh per panel — short enough that small scrolls always advance state, long
+         enough that a single fling rarely skips past a panel entirely. */
+      height: calc((var(--psr-count, 1) - 1) * 80vh + 100vh);
+      background: var(--obsidian);
+    }
+    .psr-stage {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      padding-top: 90px; /* clears the navbar; panel content sits right under it */
+      overflow: hidden;
+    }
+    /* Tighten the heading area above the track when PSR is active. */
+    body.psr-active #services { padding: 80px 0 0; }
+    body.psr-active .services-intro { margin: 0 auto 12px; }
+    body.psr-active .svc-marquee { margin-bottom: 0; }
+    .psr-stage::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 30% 50%, rgba(201,168,76,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 45% at 80% 70%, rgba(201,168,76,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .psr-stage::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.18), transparent);
+    }
+
+    .psr-rail {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 4;
+    }
+    .psr-rail-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.18);
+      transition: background 0.45s ease, transform 0.45s ease;
+    }
+    .psr-rail-dot.is-on {
+      background: var(--gold);
+      transform: scale(1.4);
+    }
+
+    .psr-counter {
+      position: absolute;
+      top: 56px;
+      right: 56px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: rgba(201,168,76,0.6);
+      z-index: 4;
+    }
+    .psr-counter b {
+      font-weight: 400;
+      color: var(--gold);
+      font-size: 1.1rem;
+      letter-spacing: 0.04em;
+      margin-right: 6px;
+    }
+
+    .psr-panels {
+      position: relative;
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 56px;
+      height: 78vh;
+      max-height: 720px;
+    }
+
+    .psr-panel {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: 1fr 1.05fr;
+      gap: 80px;
+      align-items: center;
+      pointer-events: none;
+      /* Opacity + slight rise are driven continuously by --p (0..1) set from scroll progress. */
+      opacity: var(--p, 0);
+      transform: translateY(calc((1 - var(--p, 0)) * 36px));
+      transition: opacity 0.18s linear, transform 0.18s linear;
+      will-change: opacity, transform;
+    }
+    .psr-panel.is-active {
+      pointer-events: auto;
+      z-index: 2;
+    }
+
+    /* Scroll progress rail at the very top of the pinned stage. */
+    .psr-progress {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: rgba(201,168,76,0.08);
+      z-index: 5;
+      pointer-events: none;
+    }
+    .psr-progress::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      height: 100%;
+      width: var(--scroll-p, 0%);
+      background: linear-gradient(90deg, #c9a84c 0%, #e8d080 50%, #c9a84c 100%);
+      box-shadow: 0 0 14px rgba(201,168,76,0.45);
+      transition: width 0.15s linear;
+    }
+    .psr-panel[data-side="right"] .psr-visual { order: -1; }
+
+    /* Info column — internal stagger via nth-child delays */
+    .psr-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .psr-info > * {
+      opacity: 0;
+      transform: translateY(22px);
+      transition:
+        opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .psr-panel.is-active .psr-info > *:nth-child(1) { transition-delay: 0.10s; opacity: 1; transform: translateY(0); }
+    .psr-panel.is-active .psr-info > *:nth-child(2) { transition-delay: 0.22s; opacity: 1; transform: translateY(0); }
+    .psr-panel.is-active .psr-info > *:nth-child(3) { transition-delay: 0.34s; opacity: 1; transform: translateY(0); }
+    .psr-panel.is-active .psr-info > *:nth-child(4) { transition-delay: 0.46s; opacity: 1; transform: translateY(0); }
+    .psr-panel.is-active .psr-info > *:nth-child(5) { transition-delay: 0.58s; opacity: 1; transform: translateY(0); }
+    .psr-panel.is-active .psr-info > *:nth-child(6) { transition-delay: 0.70s; opacity: 1; transform: translateY(0); }
+
+    .psr-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .psr-eyebrow::before {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: var(--gold);
+    }
+    .psr-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.6rem, 5.2vw, 4.6rem);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -0.028em;
+      color: var(--warm-white);
+      margin-bottom: 22px;
+    }
+    .psr-title em {
+      font-style: italic;
+      font-weight: 400;
+      background: linear-gradient(135deg, #b8963e 0%, #e8d080 50%, #c9a84c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .psr-desc {
+      font-size: clamp(1rem, 1.2vw, 1.1rem);
+      line-height: 1.75;
+      font-weight: 400;
+      color: rgba(245,237,224,0.78);
+      max-width: 500px;
+      margin-bottom: 30px;
+    }
+    .psr-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 36px;
+      width: 100%;
+      max-width: 500px;
+    }
+    .psr-bullets li {
+      position: relative;
+      padding: 12px 0 12px 28px;
+      font-size: 0.86rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(245,237,224,0.82);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .psr-bullets li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 18px;
+      width: 12px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.7;
+    }
+    .psr-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      padding: 16px 30px;
+      min-height: 52px;
+      border: 1px solid rgba(201,168,76,0.4);
+      transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+    }
+    .psr-cta .arr { transition: transform 0.35s ease; }
+    .psr-cta:hover {
+      background: linear-gradient(135deg, #c9a84c 0%, #e0c472 100%);
+      color: var(--obsidian);
+      border-color: var(--gold);
+      box-shadow: 0 8px 32px rgba(201,168,76,0.32);
+    }
+    .psr-cta:hover .arr { transform: translateX(5px); }
+
+    .psr-visual {
+      position: relative;
+      opacity: 0;
+      transform: translateX(60px) scale(0.96);
+      transition:
+        opacity 1.0s cubic-bezier(0.22, 1, 0.36, 1) 0.12s,
+        transform 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
+    }
+    .psr-panel[data-side="right"] .psr-visual {
+      transform: translateX(-60px) scale(0.96);
+    }
+    .psr-panel.is-active .psr-visual {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+    .psr-img {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border: 1px solid rgba(201,168,76,0.12);
+      background: var(--obsidian-2);
+      max-height: 64vh;
+      width: 100%;
+    }
+    .psr-img img {
+      width: 100%;
+      height: 100%;
+      /* Show the entire image (no cropping or ken-burns zoom). */
+      object-fit: contain;
+      filter: brightness(0.96) saturate(0.95);
+    }
+    .psr-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(140deg, transparent 45%, rgba(13,11,12,0.35) 100%);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+    .psr-img-tag {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      font-size: 0.6rem;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: rgba(13,11,12,0.6);
+      backdrop-filter: blur(6px);
+      padding: 7px 14px;
+      border: 1px solid rgba(201,168,76,0.18);
+      z-index: 2;
+    }
+
+    @media (max-width: 900px) {
+      .psr-track { height: calc((var(--psr-count, 1) - 1) * 95vh + 100vh); }
+      .psr-stage { align-items: flex-start; padding-top: 80px; }
+      .psr-panels { padding: 0 24px; height: auto; max-height: none; }
+      .psr-panel {
+        grid-template-columns: 1fr;
+        gap: 26px;
+        align-content: start;
+      }
+      .psr-panel[data-side="right"] .psr-visual { order: 0; }
+      .psr-counter { right: 24px; top: 26px; }
+      .psr-rail { left: 14px; }
+      .psr-img { aspect-ratio: 5/4; max-height: 36vh; }
+      .psr-title { font-size: clamp(2rem, 7vw, 3rem); margin-bottom: 14px; }
+      .psr-desc { margin-bottom: 16px; }
+      .psr-bullets { margin-bottom: 20px; }
+      .psr-bullets li { padding: 7px 0 7px 18px; font-size: 0.66rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .psr-panel, .psr-info > *, .psr-visual, .psr-img img {
+        transition: none !important;
+      }
+    }
+
+    /* ============ REVEAL ANIMATION ============ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.6s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* "Takeover" scroll-in effect: section starts smaller, blurred, slightly translated,
+       then scales up and clears to fill the viewport — like the next page is taking over. */
+    [data-takeover] {
+      transform: scale(0.92) translateY(40px);
+      transform-origin: 50% 0%;
+      opacity: 0;
+      filter: blur(8px);
+      border-radius: 28px;
+      transition:
+        transform 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 1.0s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 1.0s ease,
+        border-radius 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform, opacity, filter;
+    }
+    [data-takeover].is-takeover {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      filter: blur(0);
+      border-radius: 0;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      [data-takeover] { transform: none !important; opacity: 1 !important; filter: none !important; }
+    }
+
+    /* Unified scroll-stagger system: parent gets [data-stagger], children fade up
+       with a staggered delay based on --i set in JS. Capped to feel snappy. */
+    [data-stagger] > * {
+      opacity: 0;
+      transform: translateY(22px);
+      transition:
+        opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i, 0) * 65ms),
+        transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i, 0) * 65ms);
+      will-change: transform, opacity;
+    }
+    [data-stagger].is-visible > * {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    [data-stagger][data-stagger-tight] > * {
+      transition-delay: calc(var(--i, 0) * 40ms);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      [data-stagger] > *, .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* ============ SCROLLBAR ============ */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--obsidian); }
+    ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.25); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+    /* ============ MOBILE NAV ============ */
+    .mob-menu-btn {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .mob-menu-btn span {
+      display: block;
+      width: 22px;
+      height: 1px;
+      background: var(--cream);
+      transition: all 0.3s;
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 1024px) {
+      #navbar { padding: 18px 32px; }
+      .nav-links { display: none; }
+      .mob-menu-btn { display: flex; }
+      .nav-logo .sl-logo { height: 46px; }
+      #hero .hero-content { padding: 0 32px; padding-top: 90px; }
+      .hero-stats { grid-template-columns: repeat(2, 1fr); }
+      #about { padding: 64px 32px; gap: 40px; }
+      .svc-rows { padding: 0 32px; }
+      .svc-row { gap: 50px; padding: 60px 0; min-height: auto; }
+      #why { padding: 80px 32px; }
+      .why-grid { grid-template-columns: 1fr; gap: 3px; }
+      #consult { padding: 72px 32px; grid-template-columns: 1fr; gap: 40px; }
+      .consult-actions { align-items: flex-start; }
+      footer { padding: 64px 32px 36px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
+    }
+    @media (max-width: 768px) {
+      .nav-logo .sl-logo { height: 40px; }
+      #about { grid-template-columns: 1fr; }
+      #services { padding: 80px 0 40px; }
+      .svc-rows { padding: 0 24px; }
+      .svc-row {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        padding: 48px 0;
+      }
+      .svc-row[data-side="right"] .svc-row-frame,
+      .svc-row[data-side="right"] .svc-row-info { order: initial; }
+      .svc-row[data-side="right"] .svc-row-info {
+        align-items: flex-start;
+        text-align: left;
+      }
+      .svc-row-num {
+        top: -22px; left: -8px;
+        font-size: 3rem;
+      }
+      .svc-row[data-side="right"] .svc-row-num {
+        right: auto; left: -8px;
+      }
+      footer { padding: 48px 24px 32px; }
+      .footer-top { grid-template-columns: 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
+      .hero-deco { display: none; }
+      .intro-cue { bottom: 36px; }
+    }
+    @media (max-width: 480px) {
+      #navbar { padding: 16px 20px; }
+      .nav-logo .sl-logo { height: 36px; }
+      .hero-content { padding: 0 20px; padding-top: 80px; }
+      .hero-stats { grid-template-columns: 1fr 1fr; }
+      .stat-cell { padding: 14px 16px; }
+      .hero-btns { flex-direction: column; }
+      .svc-row-name { font-size: 2.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== TOP BANNER ===== -->
+  <div id="top-banner" role="contentinfo">
+    <span>Site by</span>
+    <span class="dot" aria-hidden="true"></span>
+    <em>John Jopson</em>
+  </div>
+
+  <!-- ===== INTRO LOGO REVEAL ===== -->
+  <div id="intro" aria-label="Intro screen">
+    <div class="intro-bg-glow"></div>
+
+    <!-- Floating sparkles -->
+    <div class="intro-sparkles" aria-hidden="true">
+      <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+        <g fill="#c9a84c">
+          <circle class="sparkle" cx="240"  cy="180" r="1.5" style="animation-delay:0s"/>
+          <circle class="sparkle" cx="320"  cy="540" r="2"   style="animation-delay:0.4s"/>
+          <circle class="sparkle" cx="180"  cy="720" r="1"   style="animation-delay:0.8s"/>
+          <circle class="sparkle" cx="1180" cy="220" r="1.5" style="animation-delay:1.2s"/>
+          <circle class="sparkle" cx="1280" cy="560" r="2"   style="animation-delay:0.2s"/>
+          <circle class="sparkle" cx="1100" cy="780" r="1"   style="animation-delay:1.6s"/>
+          <circle class="sparkle" cx="720"  cy="140" r="1.5" style="animation-delay:1s"/>
+          <circle class="sparkle" cx="720"  cy="780" r="1.5" style="animation-delay:0.6s"/>
+          <circle class="sparkle" cx="500"  cy="320" r="1"   style="animation-delay:2s"/>
+          <circle class="sparkle" cx="980"  cy="380" r="1"   style="animation-delay:1.4s"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="intro-content">
+      <div class="intro-logo" id="introLogo">
+        <svg class="sl-logo" viewBox="295 350 920 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ShapeLab Aesthetic Clinic">
+          <defs>
+            <clipPath id="shapeRevealClip" clipPathUnits="objectBoundingBox">
+              <rect id="shapeRevealRect" x="0" y="0" width="1" height="1"/>
+            </clipPath>
+          </defs>
+          <g fill="#c9a84c" fill-rule="evenodd">
+            <g id="emblem">
+              <path id="emblem-box" d="M 329 362 L 329 617 L 590 617 L 590 362 L 586 361 L 582 362 L 576 362 L 575 361 L 559 361 L 558 362 L 552 362 L 551 361 L 546 362 L 544 361 L 357 361 L 356 362 L 330 361 Z M 335 368 L 336 367 L 583 367 L 584 368 L 584 610 L 583 611 L 573 611 L 572 612 L 546 612 L 545 611 L 521 611 L 520 612 L 519 611 L 512 611 L 511 612 L 503 612 L 502 611 L 501 612 L 500 611 L 499 612 L 498 611 L 497 612 L 496 611 L 495 612 L 351 611 L 350 612 L 336 612 L 335 611 Z"/>
+              <path id="emblem-s" d="M 400 508 L 406 517 L 414 536 L 415 559 L 411 573 L 404 585 L 395 594 L 389 598 L 401 591 L 411 581 L 418 569 L 421 559 L 421 543 L 418 533 L 413 523 Z M 417 383 L 408 387 L 397 394 L 382 410 L 378 417 L 374 429 L 373 450 L 378 467 L 386 480 L 395 491 L 421 518 L 427 527 L 433 542 L 433 547 L 434 548 L 433 560 L 431 567 L 425 578 L 412 591 L 396 600 L 384 603 L 389 603 L 405 598 L 412 594 L 414 594 L 428 585 L 438 575 L 444 566 L 449 553 L 449 547 L 450 546 L 449 532 L 447 525 L 442 515 L 429 498 L 402 471 L 396 463 L 390 452 L 386 438 L 387 420 L 391 409 L 396 401 L 408 389 Z M 445 377 L 427 383 L 414 392 L 404 405 L 399 417 L 398 439 L 401 450 L 409 464 L 426 481 L 444 496 L 450 503 L 454 511 L 455 511 L 451 502 L 444 492 L 423 471 L 414 459 L 409 449 L 405 433 L 405 425 L 406 424 L 407 414 L 414 399 L 427 386 L 440 379 L 447 377 Z"/>
+              <path id="emblem-l" d="M 469 434 L 468 435 L 468 573 L 558 573 L 558 567 L 487 567 L 486 566 L 486 435 L 485 434 L 482 435 L 481 434 L 473 434 L 472 435 Z"/>
+            </g>
+            <path id="divider" d="M 626 361 L 625 362 L 625 617 L 628 617 L 628 362 Z"/>
+            <g id="wordmark">
+              <path id="shape-text" d="M 953 462 L 953 521 L 996 521 L 995 518 L 964 518 L 963 517 L 963 493 L 964 492 L 991 492 L 991 490 L 986 489 L 984 490 L 964 489 L 963 488 L 963 466 L 964 465 L 995 465 L 996 463 L 995 462 Z M 928 465 L 918 462 L 889 462 L 889 521 L 899 521 L 899 499 L 900 498 L 919 498 L 930 494 L 935 489 L 937 484 L 937 476 L 935 471 Z M 900 465 L 915 465 L 921 468 L 925 473 L 926 485 L 924 489 L 919 494 L 914 496 L 906 496 L 899 494 L 899 466 Z M 841 462 L 813 521 L 818 520 L 822 509 L 827 501 L 853 501 L 855 503 L 863 521 L 874 521 L 874 519 L 849 469 L 849 467 L 847 465 L 847 463 L 846 462 Z M 840 474 L 852 497 L 851 498 L 829 498 L 828 497 L 838 476 Z M 744 462 L 744 521 L 755 521 L 755 493 L 756 492 L 785 492 L 786 493 L 786 521 L 796 521 L 797 520 L 797 463 L 796 462 L 786 462 L 786 488 L 785 489 L 758 490 L 755 488 L 755 462 Z M 696 461 L 685 464 L 678 470 L 676 476 L 677 483 L 681 488 L 688 492 L 710 498 L 715 503 L 716 506 L 715 511 L 710 517 L 705 519 L 692 519 L 677 511 L 676 514 L 681 518 L 689 521 L 704 522 L 712 520 L 722 513 L 725 507 L 725 500 L 723 496 L 718 491 L 708 487 L 696 485 L 690 482 L 687 479 L 686 471 L 692 465 L 695 464 L 707 464 L 718 471 L 719 469 L 718 466 L 712 463 L 703 461 Z"/>
+              <path id="lab-block" d="M 1009 462 L 1009 523 L 1012 529 L 1016 532 L 1019 533 L 1193 533 L 1199 531 L 1203 526 L 1204 523 L 1204 461 L 1202 457 L 1196 453 L 1193 452 L 1019 452 L 1012 456 Z M 1146 465 L 1176 466 L 1183 469 L 1188 475 L 1187 484 L 1182 489 L 1176 491 L 1176 492 L 1179 492 L 1186 495 L 1191 501 L 1191 508 L 1186 515 L 1177 519 L 1171 519 L 1170 520 L 1142 520 L 1141 519 L 1141 467 Z M 1150 494 L 1150 515 L 1151 516 L 1173 515 L 1179 511 L 1181 507 L 1181 502 L 1180 499 L 1177 496 L 1173 494 Z M 1150 470 L 1150 489 L 1152 490 L 1155 489 L 1158 490 L 1171 489 L 1174 488 L 1178 484 L 1179 480 L 1178 475 L 1174 471 L 1166 469 L 1151 469 Z M 1101 465 L 1103 465 L 1107 471 L 1110 479 L 1130 517 L 1129 520 L 1122 520 L 1120 518 L 1112 502 L 1086 502 L 1080 517 L 1078 519 L 1074 518 L 1099 467 Z M 1099 477 L 1089 496 L 1089 498 L 1110 498 L 1102 481 Z M 1029 466 L 1034 466 L 1035 465 L 1037 466 L 1037 514 L 1038 515 L 1067 515 L 1068 516 L 1067 520 L 1066 519 L 1065 520 L 1029 520 L 1028 519 L 1028 467 Z"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="intro-tagline">Subtle changes, Real results</div>
+    </div>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo" id="navLogo" aria-label="ShapeLab Aesthetic Clinic — home">
+      <svg class="sl-logo sl-logo-static" viewBox="295 350 920 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ShapeLab">
+        <g fill="#c9a84c" fill-rule="evenodd">
+          <path d="M 329 362 L 329 617 L 590 617 L 590 362 L 586 361 L 582 362 L 576 362 L 575 361 L 559 361 L 558 362 L 552 362 L 551 361 L 546 362 L 544 361 L 357 361 L 356 362 L 330 361 Z M 335 368 L 336 367 L 583 367 L 584 368 L 584 610 L 583 611 L 573 611 L 572 612 L 546 612 L 545 611 L 521 611 L 520 612 L 519 611 L 512 611 L 511 612 L 503 612 L 502 611 L 501 612 L 500 611 L 499 612 L 498 611 L 497 612 L 496 611 L 495 612 L 351 611 L 350 612 L 336 612 L 335 611 Z"/>
+          <path d="M 400 508 L 406 517 L 414 536 L 415 559 L 411 573 L 404 585 L 395 594 L 389 598 L 401 591 L 411 581 L 418 569 L 421 559 L 421 543 L 418 533 L 413 523 Z M 417 383 L 408 387 L 397 394 L 382 410 L 378 417 L 374 429 L 373 450 L 378 467 L 386 480 L 395 491 L 421 518 L 427 527 L 433 542 L 433 547 L 434 548 L 433 560 L 431 567 L 425 578 L 412 591 L 396 600 L 384 603 L 389 603 L 405 598 L 412 594 L 414 594 L 428 585 L 438 575 L 444 566 L 449 553 L 449 547 L 450 546 L 449 532 L 447 525 L 442 515 L 429 498 L 402 471 L 396 463 L 390 452 L 386 438 L 387 420 L 391 409 L 396 401 L 408 389 Z M 445 377 L 427 383 L 414 392 L 404 405 L 399 417 L 398 439 L 401 450 L 409 464 L 426 481 L 444 496 L 450 503 L 454 511 L 455 511 L 451 502 L 444 492 L 423 471 L 414 459 L 409 449 L 405 433 L 405 425 L 406 424 L 407 414 L 414 399 L 427 386 L 440 379 L 447 377 Z"/>
+          <path d="M 469 434 L 468 435 L 468 573 L 558 573 L 558 567 L 487 567 L 486 566 L 486 435 L 485 434 L 482 435 L 481 434 L 473 434 L 472 435 Z"/>
+          <path d="M 626 361 L 625 362 L 625 617 L 628 617 L 628 362 Z"/>
+          <path d="M 953 462 L 953 521 L 996 521 L 995 518 L 964 518 L 963 517 L 963 493 L 964 492 L 991 492 L 991 490 L 986 489 L 984 490 L 964 489 L 963 488 L 963 466 L 964 465 L 995 465 L 996 463 L 995 462 Z M 928 465 L 918 462 L 889 462 L 889 521 L 899 521 L 899 499 L 900 498 L 919 498 L 930 494 L 935 489 L 937 484 L 937 476 L 935 471 Z M 900 465 L 915 465 L 921 468 L 925 473 L 926 485 L 924 489 L 919 494 L 914 496 L 906 496 L 899 494 L 899 466 Z M 841 462 L 813 521 L 818 520 L 822 509 L 827 501 L 853 501 L 855 503 L 863 521 L 874 521 L 874 519 L 849 469 L 849 467 L 847 465 L 847 463 L 846 462 Z M 840 474 L 852 497 L 851 498 L 829 498 L 828 497 L 838 476 Z M 744 462 L 744 521 L 755 521 L 755 493 L 756 492 L 785 492 L 786 493 L 786 521 L 796 521 L 797 520 L 797 463 L 796 462 L 786 462 L 786 488 L 785 489 L 758 490 L 755 488 L 755 462 Z M 696 461 L 685 464 L 678 470 L 676 476 L 677 483 L 681 488 L 688 492 L 710 498 L 715 503 L 716 506 L 715 511 L 710 517 L 705 519 L 692 519 L 677 511 L 676 514 L 681 518 L 689 521 L 704 522 L 712 520 L 722 513 L 725 507 L 725 500 L 723 496 L 718 491 L 708 487 L 696 485 L 690 482 L 687 479 L 686 471 L 692 465 L 695 464 L 707 464 L 718 471 L 719 469 L 718 466 L 712 463 L 703 461 Z"/>
+          <path d="M 1009 462 L 1009 523 L 1012 529 L 1016 532 L 1019 533 L 1193 533 L 1199 531 L 1203 526 L 1204 523 L 1204 461 L 1202 457 L 1196 453 L 1193 452 L 1019 452 L 1012 456 Z M 1146 465 L 1176 466 L 1183 469 L 1188 475 L 1187 484 L 1182 489 L 1176 491 L 1176 492 L 1179 492 L 1186 495 L 1191 501 L 1191 508 L 1186 515 L 1177 519 L 1171 519 L 1170 520 L 1142 520 L 1141 519 L 1141 467 Z M 1150 494 L 1150 515 L 1151 516 L 1173 515 L 1179 511 L 1181 507 L 1181 502 L 1180 499 L 1177 496 L 1173 494 Z M 1150 470 L 1150 489 L 1152 490 L 1155 489 L 1158 490 L 1171 489 L 1174 488 L 1178 484 L 1179 480 L 1178 475 L 1174 471 L 1166 469 L 1151 469 Z M 1101 465 L 1103 465 L 1107 471 L 1110 479 L 1130 517 L 1129 520 L 1122 520 L 1120 518 L 1112 502 L 1086 502 L 1080 517 L 1078 519 L 1074 518 L 1099 467 Z M 1099 477 L 1089 496 L 1089 498 L 1110 498 L 1102 481 Z M 1029 466 L 1034 466 L 1035 465 L 1037 466 L 1037 514 L 1038 515 L 1067 515 L 1068 516 L 1067 520 L 1066 519 L 1065 520 L 1029 520 L 1028 519 L 1028 467 Z"/>
+        </g>
+      </svg>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#why">Why Us</a></li>
+      <li><a href="#consult">Consult</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="nav-book">Book Now</a>
+    <button class="mob-menu-btn" onclick="toggleNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section id="hero">
+    <div class="hero-glow"></div>
+
+    <!-- Animated decorative SVG -->
+    <div class="hero-deco" aria-hidden="true">
+      <svg viewBox="0 0 900 1000" fill="none" preserveAspectRatio="xMidYMid slice">
+        <path class="deco-path" d="M 450 0 C 550 200, 800 350, 900 550 C 800 750, 550 870, 450 1000" stroke="#c9a84c" stroke-width="0.6" fill="none" opacity="0.18"/>
+        <path class="deco-path" d="M 500 0 C 620 180, 850 300, 900 480 C 850 700, 620 840, 500 1000" stroke="#c9a84c" stroke-width="0.35" fill="none" opacity="0.1"/>
+        <path class="deco-path" d="M 380 0 C 520 220, 780 320, 900 600 C 780 800, 520 900, 380 1000" stroke="#c9a84c" stroke-width="0.35" fill="none" opacity="0.1"/>
+        <path class="deco-path" d="M 300 300 Q 550 400, 750 550 T 900 700" stroke="#c9a84c" stroke-width="0.4" fill="none" opacity="0.12"/>
+        <circle class="deco-circle" cx="680" cy="200" r="100" stroke="#c9a84c" stroke-width="0.3" fill="none" opacity="0.08"/>
+        <circle class="deco-circle" cx="710" cy="175" r="155" stroke="#c9a84c" stroke-width="0.2" fill="none" opacity="0.05"/>
+        <!-- Sparkle dots -->
+        <circle class="deco-circle" cx="630" cy="140" r="1.8" fill="#c9a84c" opacity="0.5"/>
+        <circle class="deco-circle" cx="760" cy="310" r="1.2" fill="#c9a84c" opacity="0.4"/>
+        <circle class="deco-circle" cx="700" cy="480" r="1.8" fill="#c9a84c" opacity="0.35"/>
+        <circle class="deco-circle" cx="820" cy="620" r="1.2" fill="#c9a84c" opacity="0.3"/>
+        <circle class="deco-circle" cx="660" cy="740" r="1.5" fill="#c9a84c" opacity="0.25"/>
+      </svg>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-line"></span>
+        ShapeLab Aesthetic Clinic &nbsp;·&nbsp; Puerto Princesa City
+      </div>
+
+      <h1 class="hero-title">
+        Sculpted.<br>Refined.<br><span class="italic-gold">Radiantly You.</span>
+      </h1>
+
+      <p class="hero-body">
+        Advanced aesthetic and wellness treatments — doctor-guided, science-backed, and tailored precisely to your confidence goals.
+      </p>
+
+      <div class="hero-btns">
+        <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="btn-gold">Book Your Appointment</a>
+        <a href="#services" class="btn-ghost">Explore Treatments</a>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-cell">
+        <div class="stat-num">15+</div>
+        <div class="stat-lbl">Premium Treatments</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">100%</div>
+        <div class="stat-lbl">Doctor-Guided</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">Free</div>
+        <div class="stat-lbl">Body Composition Analysis</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="shimmer-bar"></div>
+
+  <!-- ===== ABOUT BAND ===== -->
+  <section id="about" data-stagger data-takeover>
+    <div class="about-quote">
+      "Where <em>science</em> meets artistry — and subtle changes create <em>real results.</em>"
+    </div>
+    <div class="about-right">
+      <div class="about-lbl">About ShapeLab</div>
+      <h2 class="about-heading">Puerto Princesa's Premier Aesthetic Clinic</h2>
+      <p class="about-text">
+        Located in the heart of Puerto Princesa City, ShapeLab Aesthetic Clinic is a doctor-led center dedicated to non-surgical body sculpting, skin renewal, and holistic wellness. Every treatment begins with a complimentary body composition analysis and a personalized consultation — because your journey is uniquely yours.
+      </p>
+    </div>
+  </section>
+
+  <div class="shimmer-bar"></div>
+
+  <!-- ===== SERVICES (vertical scroll-reveal) ===== -->
+  <section id="services">
+
+    <!-- Centered intro -->
+    <div class="services-intro" data-stagger>
+      <div class="section-label">What We Offer</div>
+      <h2 class="section-title">Our <em>Signature</em> Treatments</h2>
+      <div class="services-filter">
+        <div class="filter-row">
+          <button class="ftab on" onclick="filter('all',this)">All</button>
+          <button class="ftab" onclick="filter('face',this)">Face &amp; Skin</button>
+          <button class="ftab" onclick="filter('body',this)">Body Sculpt</button>
+          <button class="ftab" onclick="filter('wellness',this)">Wellness</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MARQUEE TICKER ===== -->
+    <div class="svc-marquee" aria-hidden="true">
+      <div class="svc-marquee-track">
+        <span class="mq-item">SkinRenew</span><span class="mq-sep">✦</span>
+        <span class="mq-item">LipoSculpt</span><span class="mq-sep">✦</span>
+        <span class="mq-item">CoreSculpt</span><span class="mq-sep">✦</span>
+        <span class="mq-item">Signature Facials</span><span class="mq-sep">✦</span>
+        <span class="mq-item">RF FirmSculpt</span><span class="mq-sep">✦</span>
+        <span class="mq-item">SculptTox</span><span class="mq-sep">✦</span>
+        <span class="mq-item">Thread Lift</span><span class="mq-sep">✦</span>
+        <span class="mq-item">IV Drip Therapy</span><span class="mq-sep">✦</span>
+        <span class="mq-item">HairRevive</span><span class="mq-sep">✦</span>
+        <span class="mq-item">Mounjaro®</span><span class="mq-sep">✦</span>
+        <span class="mq-item">Sclerotherapy</span><span class="mq-sep">✦</span>
+        <span class="mq-item">Body Analysis</span><span class="mq-sep">✦</span>
+        <!-- Duplicate for seamless loop -->
+        <span class="mq-item">SkinRenew</span><span class="mq-sep">✦</span>
+        <span class="mq-item">LipoSculpt</span><span class="mq-sep">✦</span>
+        <span class="mq-item">CoreSculpt</span><span class="mq-sep">✦</span>
+        <span class="mq-item">Signature Facials</span><span class="mq-sep">✦</span>
+        <span class="mq-item">RF FirmSculpt</span><span class="mq-sep">✦</span>
+        <span class="mq-item">SculptTox</span><span class="mq-sep">✦</span>
+        <span class="mq-item">Thread Lift</span><span class="mq-sep">✦</span>
+        <span class="mq-item">IV Drip Therapy</span><span class="mq-sep">✦</span>
+        <span class="mq-item">HairRevive</span><span class="mq-sep">✦</span>
+        <span class="mq-item">Mounjaro®</span><span class="mq-sep">✦</span>
+        <span class="mq-item">Sclerotherapy</span><span class="mq-sep">✦</span>
+        <span class="mq-item">Body Analysis</span><span class="mq-sep">✦</span>
+      </div>
+    </div>
+
+    <!-- ===== PINNED SCROLL-STORYTELLING (built by JS from .svc-row data) ===== -->
+    <div id="psr-root" class="psr-track" aria-label="Treatments showcase">
+      <div class="psr-stage">
+        <div class="psr-progress" id="psr-progress" aria-hidden="true"></div>
+        <div class="psr-rail" aria-hidden="true" id="psr-rail"></div>
+        <div class="psr-panels" id="psr-panels"></div>
+      </div>
+    </div>
+
+    <!-- ===== VERTICAL SVC ROWS (kept as data source; hidden when JS pinned mode is active) ===== -->
+    <div class="svc-rows">
+
+      <!-- 01 SkinRenew -->
+      <div class="svc-row" data-side="left" data-cat="face">
+        <div class="svc-row-frame">
+          <div class="svc-row-num">01</div>
+          <div class="svc-row-img-wrap">
+            <img src="brandassets/service1.jpg" alt="SkinRenew Microneedling" loading="lazy">
+          </div>
+        </div>
+        <div class="svc-row-info">
+          <span class="svc-row-tag">Microneedling</span>
+          <h3 class="svc-row-name">Skin<em>Renew</em></h3>
+          <p class="svc-row-desc">Boost collagen, improve texture, minimize pores, and reveal smoother, healthier-looking skin. Refine. Renew. Glow.</p>
+          <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="svc-row-link">Book Treatment <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 02 LipoSculpt -->
+      <div class="svc-row" data-side="right" data-cat="body">
+        <div class="svc-row-frame">
+          <div class="svc-row-num">02</div>
+          <div class="svc-row-img-wrap">
+            <img src="brandassets/service2.jpg" alt="LipoSculpt Mesolipo" loading="lazy">
+          </div>
+        </div>
+        <div class="svc-row-info">
+          <span class="svc-row-tag">Mesolipo</span>
+          <h3 class="svc-row-name">Lipo<em>Sculpt</em></h3>
+          <p class="svc-row-desc">Advanced contouring solutions for face and body — Kabelline, SlimPoint, LipoVenis, LemonBottle, and our signature ShapeLab cocktail. Sculpt. Refine. Define.</p>
+          <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="svc-row-link">Book Treatment <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 03 CoreSculpt -->
+      <div class="svc-row" data-side="left" data-cat="body">
+        <div class="svc-row-frame">
+          <div class="svc-row-num">03</div>
+          <div class="svc-row-img-wrap">
+            <img src="brandassets/service3.jpg" alt="CoreSculpt Emsculpt" loading="lazy">
+          </div>
+        </div>
+        <div class="svc-row-info">
+          <span class="svc-row-tag">Emsculpt</span>
+          <h3 class="svc-row-name">Core<em>Sculpt</em></h3>
+          <p class="svc-row-desc">Tone, define, and strengthen — sculpt without the sweat. The most efficient way to reach your fitness goals.</p>
+          <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="svc-row-link">Book Treatment <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 04 Signature Facials -->
+      <div class="svc-row" data-side="right" data-cat="face">
+        <div class="svc-row-frame">
+          <div class="svc-row-num">04</div>
+          <div class="svc-row-img-wrap">
+            <img src="brandassets/service4.jpg" alt="Signature Facials" loading="lazy">
+          </div>
+        </div>
+        <div class="svc-row-info">
+          <span class="svc-row-tag">Skin Care</span>
+          <h3 class="svc-row-name">Signature <em>Facials</em></h3>
+          <p class="svc-row-desc">Deep cleansing, intense hydration, and skin rejuvenation — designed by our doctor. Glow, refreshed, radiantly you.</p>
+          <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="svc-row-link">Book Treatment <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 05 RF FirmSculpt -->
+      <div class="svc-row" data-side="left" data-cat="body">
+        <div class="svc-row-frame">
+          <div class="svc-row-num">05</div>
+          <div class="svc-row-img-wrap">
+            <img src="brandassets/service12.jpg" alt="RF FirmSculpt" loading="lazy">
+          </div>
+        </div>
+        <div class="svc-row-info">
+          <span class="svc-row-tag">Radiofrequency</span>
+          <h3 class="svc-row-name">RF <em>FirmSculpt</em></h3>
+          <p class="svc-row-desc">Tighten. Sculpt. Confident. Advanced RF technology for firmer skin and a more defined silhouette. Non-invasive, zero downtime.</p>
+          <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="svc-row-link">Book Treatment <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 06 SculptTox (Botox) -->
+      <div class="svc-row" data-side="right" data-cat="face">
+        <div class="svc-row-frame">
+          <div class="svc-row-num">06</div>
+          <div class="svc-row-img-wrap">
+            <img src="brandassets/service8.jpg" alt="SculptTox Botox" loading="lazy">
+          </div>
+        </div>
+        <div class="svc-row-info">
+          <span class="svc-row-tag">Botox · Sculpted</span>
+          <h3 class="svc-row-name">Sculpt<em>Tox</em></h3>
+          <p class="svc-row-desc">JawSculpt · NeckSculpt · TrapSculpt · DeltSculpt · SweatOx. Botox, but sculpted — precision, confidence, you.</p>
+          <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="svc-row-link">Book Treatment <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 07 Thread Lift -->
+      <div class="svc-row" data-side="left" data-cat="face">
+        <div class="svc-row-frame">
+          <div class="svc-row-num">07</div>
+          <div class="svc-row-img-wrap">
+            <img src="brandassets/service7.jpg" alt="Thread Lift" loading="lazy">
+          </div>
+        </div>
+        <div class="svc-row-info">
+          <span class="svc-row-tag">Thread Lift</span>
+          <h3 class="svc-row-name">Lift &amp; <em>Define</em></h3>
+          <p class="svc-row-desc">ThreadLift Skin · ThreadLift Contour · NoseSculpt (Hiko Nose Lift). Subtle changes, sculpted results — without surgery.</p>
+          <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="svc-row-link">Book Treatment <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 08 IV Drip Therapy -->
+      <div class="svc-row" data-side="right" data-cat="wellness">
+        <div class="svc-row-frame">
+          <div class="svc-row-num">08</div>
+          <div class="svc-row-img-wrap">
+            <img src="brandassets/service14.jpg" alt="IV Drip Therapy" loading="lazy">
+          </div>
+        </div>
+        <div class="svc-row-info">
+          <span class="svc-row-tag">Wellness</span>
+          <h3 class="svc-row-name">IV Drip <em>Therapy</em></h3>
+          <p class="svc-row-desc">Rehydrate. Replenish. Revive. Deep hydration, boosted energy, and immune support — all in one session.</p>
+          <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="svc-row-link">Book Treatment <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 09 HairRevive -->
+      <div class="svc-row" data-side="left" data-cat="wellness">
+        <div class="svc-row-frame">
+          <div class="svc-row-num">09</div>
+          <div class="svc-row-img-wrap">
+            <img src="brandassets/service11.jpg" alt="HairRevive" loading="lazy">
+          </div>
+        </div>
+        <div class="svc-row-info">
+          <span class="svc-row-tag">Hair Restoration</span>
+          <h3 class="svc-row-name">Hair<em>Revive</em></h3>
+          <p class="svc-row-desc">Stronger roots. Fuller confidence. Medically guided treatment to stimulate growth and restore healthier, fuller hair.</p>
+          <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="svc-row-link">Book Treatment <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 10 Mounjaro -->
+      <div class="svc-row" data-side="right" data-cat="wellness">
+        <div class="svc-row-frame">
+          <div class="svc-row-num">10</div>
+          <div class="svc-row-img-wrap">
+            <img src="brandassets/service9.jpg" alt="Mounjaro Tirzepatide" loading="lazy">
+          </div>
+        </div>
+        <div class="svc-row-info">
+          <span class="svc-row-tag">Weight Management</span>
+          <h3 class="svc-row-name">Mounjaro<em>®</em></h3>
+          <p class="svc-row-desc">Doctor-guided Tirzepatide program. The body you've been thinking about starts here — subtle changes, real results.</p>
+          <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="svc-row-link">Book Treatment <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 11 Sclerotherapy -->
+      <div class="svc-row" data-side="left" data-cat="body">
+        <div class="svc-row-frame">
+          <div class="svc-row-num">11</div>
+          <div class="svc-row-img-wrap">
+            <img src="brandassets/service6.jpg" alt="Sclerotherapy" loading="lazy">
+          </div>
+        </div>
+        <div class="svc-row-info">
+          <span class="svc-row-tag">Vein Treatment</span>
+          <h3 class="svc-row-name">Sclero<em>therapy</em></h3>
+          <p class="svc-row-desc">Fade visible veins. Helps reduce the appearance of spider veins — safely and effectively, doctor-performed.</p>
+          <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="svc-row-link">Book Treatment <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 12 Wart & Skin Tag Removal -->
+      <div class="svc-row" data-side="right" data-cat="face">
+        <div class="svc-row-frame">
+          <div class="svc-row-num">12</div>
+          <div class="svc-row-img-wrap">
+            <img src="brandassets/service13.jpg" alt="Skin Tag and Wart Removal" loading="lazy">
+          </div>
+        </div>
+        <div class="svc-row-info">
+          <span class="svc-row-tag">Removal</span>
+          <h3 class="svc-row-name">Skin Tag &amp; <em>Wart Removal</em></h3>
+          <p class="svc-row-desc">Quick, safe, doctor-performed procedure. Small removal, big difference — smoother, clearer skin.</p>
+          <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="svc-row-link">Book Treatment <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 13 Body Composition Analysis -->
+      <div class="svc-row" data-side="left" data-cat="wellness">
+        <div class="svc-row-frame">
+          <div class="svc-row-num">13</div>
+          <div class="svc-row-img-wrap">
+            <img src="brandassets/service5.jpg" alt="Body Composition Analysis" loading="lazy">
+          </div>
+        </div>
+        <div class="svc-row-info">
+          <span class="svc-row-tag">Complimentary Assessment</span>
+          <h3 class="svc-row-name">Body <em>Composition</em></h3>
+          <p class="svc-row-desc">Know more than the scale. Free body composition scan included with every visit — doctor-guided, personalized recommendations.</p>
+          <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="svc-row-link">Book Treatment <span class="arr">→</span></a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <div class="shimmer-bar"></div>
+
+  <!-- ===== WHY SHAPELAB ===== -->
+  <section id="why" data-stagger data-takeover>
+    <div style="max-width:560px;">
+      <div class="section-label">The ShapeLab Difference</div>
+      <h2 class="section-title">Science. <em>Artistry.</em><br>Results You Can See.</h2>
+    </div>
+
+    <div class="why-grid" data-stagger>
+      <div class="why-card">
+        <div class="why-num">01</div>
+        <svg class="why-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="24" cy="14" r="7"/>
+          <path d="M10 40c0-8 4-12 14-12s14 4 14 12"/>
+          <path d="M21 23l-4 12 7-5 7 5-4-12" stroke-width="0.8"/>
+        </svg>
+        <div class="why-heading">Doctor-Guided Treatments</div>
+        <div class="why-text">Every treatment plan is designed and supervised by our licensed physician. Your personalized consultation ensures the right approach for your unique body and goals.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-num">02</div>
+        <svg class="why-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="8" y="10" width="32" height="28" rx="3"/>
+          <path d="M16 24l5 5 11-10"/>
+          <path d="M8 17h32"/>
+          <circle cx="38" cy="12" r="4" fill="rgba(201,168,76,0.15)"/>
+          <path d="M36.5 12l1 1.2 2-2" stroke-width="0.8"/>
+        </svg>
+        <div class="why-heading">Clinically Proven Technology</div>
+        <div class="why-text">We use the latest FDA-recognized aesthetic devices — from Emsculpt body sculpting to RF skin tightening — so your results are real, measurable, and lasting.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-num">03</div>
+        <svg class="why-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M24 8l4 9 10 1.5-7.2 7 1.7 10L24 30l-8.5 5.5 1.7-10L10 18.5 20 17z"/>
+          <circle cx="24" cy="24" r="5" fill="rgba(201,168,76,0.1)"/>
+        </svg>
+        <div class="why-heading">Tailored to You</div>
+        <div class="why-text">No cookie-cutter plans. Your complimentary body composition analysis and in-depth consultation build a roadmap that's specific to your body, your timeline, and your confidence.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="shimmer-bar"></div>
+
+  <!-- ===== CONSULTATION CTA ===== -->
+  <section id="consult" data-stagger>
+    <div class="consult-text">
+      <div class="section-label">Start Your Journey</div>
+      <h2 class="consult-heading">
+        Not Sure<br>Where to Start?<br><em>We'll Guide You.</em>
+      </h2>
+      <p class="consult-sub">
+        Share your concerns with us. Our doctor will create a personalized treatment plan tailored to your goals — and your complimentary body composition assessment is on us.
+      </p>
+    </div>
+    <div class="consult-actions">
+      <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="btn-gold" style="min-width:240px;">Book a Consultation</a>
+      <a href="tel:+639294823347" class="btn-ghost" style="min-width:240px;">Call 0929-482-3347</a>
+      <div class="consult-note">Consultation recommended before treatment</div>
+    </div>
+  </section>
+
+  <div class="shimmer-bar"></div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer id="contact">
+    <div class="footer-top" data-stagger data-stagger-tight>
+      <div>
+        <a class="footer-logo" href="#" aria-label="ShapeLab Aesthetic Clinic — back to top" onclick="event.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' });">
+          <img src="brandassets/brand logo.jpg" alt="ShapeLab Aesthetic Clinic">
+        </a>
+        <p class="footer-tagline">
+          "Subtle changes.<br><em>Real results.</em>"
+        </p>
+      </div>
+      <div>
+        <div class="footer-col-title">Treatments</div>
+        <ul class="footer-list">
+          <li><a href="#services">SkinRenew</a></li>
+          <li><a href="#services">LipoSculpt</a></li>
+          <li><a href="#services">CoreSculpt</a></li>
+          <li><a href="#services">RF FirmSculpt</a></li>
+          <li><a href="#services">Thread Lift</a></li>
+          <li><a href="#services">Signature Facials</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">More</div>
+        <ul class="footer-list">
+          <li><a href="#services">SculptTox (Botox)</a></li>
+          <li><a href="#services">HairRevive</a></li>
+          <li><a href="#services">Mounjaro®</a></li>
+          <li><a href="#services">IV Drip Therapy</a></li>
+          <li><a href="#services">Sclerotherapy</a></li>
+          <li><a href="#services">Body Composition</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Contact</div>
+        <div class="contact-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.01 1.16 2 2 0 012 .98h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 8.37a16 16 0 006.72 6.72l1.73-1.74a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 15.6v1.32z"/>
+          </svg>
+          <a href="tel:+639294823347">0929-482-3347</a>
+        </div>
+        <div class="contact-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+          </svg>
+          <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener">book.easethetics.ph</a>
+        </div>
+        <div class="contact-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          <button type="button" class="map-trigger" onclick="openMapModal()" aria-label="View clinic location on map">DJC Bldg., Socrates Rd.,<br>Brgy. San Pedro,<br>Puerto Princesa City</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 ShapeLab Aesthetic Clinic. All rights reserved.</div>
+      <div class="footer-loc">Puerto Princesa City, Palawan, Philippines</div>
+    </div>
+  </footer>
+
+  <!-- ===== MAP MODAL ===== -->
+  <div class="map-modal" id="mapModal" role="dialog" aria-modal="true" aria-labelledby="mapModalTitle" hidden>
+    <div class="map-modal-card" role="document">
+      <div class="map-modal-head">
+        <div>
+          <div class="label">Visit Us</div>
+          <div class="title" id="mapModalTitle">DJC Bldg., Socrates Rd. · Brgy. San Pedro · Puerto Princesa City</div>
+        </div>
+        <button type="button" class="map-modal-close" id="mapModalClose" aria-label="Close map">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M6 18L18 6"/></svg>
+        </button>
+      </div>
+      <div class="map-modal-body" id="mapModalBody"><!-- iframe injected on first open --></div>
+      <div class="map-modal-foot">
+        <span>ShapeLab Aesthetic Clinic</span>
+        <a href="https://www.google.com/maps/search/?api=1&query=Socrates+Road,+San+Pedro,+Puerto+Princesa+City,+Palawan,+Philippines" target="_blank" rel="noopener">Open in Google Maps ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---- Map modal (in-page Google Maps popup) ----
+    function openMapModal() {
+      const modal = document.getElementById('mapModal');
+      const body = document.getElementById('mapModalBody');
+      if (!modal || !body) return;
+      // Lazy-inject the iframe on first open so the page loads faster.
+      if (!body.querySelector('iframe')) {
+        const iframe = document.createElement('iframe');
+        // "DJC Bldg." isn't indexed in Google Maps — anchoring on the road + barangay
+        // lands the pin at the correct neighbourhood instead of an unrelated location.
+        iframe.src = 'https://www.google.com/maps?q=Socrates+Road,+San+Pedro,+Puerto+Princesa+City,+Palawan,+Philippines&z=17&output=embed';
+        iframe.loading = 'lazy';
+        iframe.referrerPolicy = 'no-referrer-when-downgrade';
+        iframe.allowFullscreen = true;
+        iframe.title = 'ShapeLab Aesthetic Clinic location';
+        body.appendChild(iframe);
+      }
+      modal.hidden = false;
+      // Force a reflow so the transition fires from the hidden state.
+      void modal.offsetWidth;
+      modal.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMapModal() {
+      const modal = document.getElementById('mapModal');
+      if (!modal) return;
+      modal.classList.remove('is-open');
+      document.body.style.overflow = '';
+      setTimeout(() => { modal.hidden = true; }, 450);
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('mapModalClose')?.addEventListener('click', closeMapModal);
+      document.getElementById('mapModal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'mapModal') closeMapModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMapModal();
+      });
+    });
+
+    // ---- Scrolled nav ----
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    // ---- Mobile nav ----
+    function toggleNav() {
+      const links = document.querySelector('.nav-links');
+      if (links.style.display === 'flex') {
+        links.style.display = '';
+      } else {
+        Object.assign(links.style, {
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'absolute',
+          top: '100%', left: '0', right: '0',
+          background: 'rgba(13,11,12,0.97)',
+          padding: '20px 32px',
+          gap: '14px',
+          borderBottom: '1px solid rgba(201,168,76,0.1)'
+        });
+      }
+    }
+
+    // ---- INTRO LOGO REVEAL + FLIP TO NAVBAR ----
+    (function initIntro() {
+      const intro = document.getElementById('intro');
+      const introLogo = document.getElementById('introLogo');
+      const navLogo = document.getElementById('navLogo');
+      const navbar = document.getElementById('navbar');
+      if (!intro || !introLogo || !navLogo) return;
+
+      document.body.classList.add('intro-active');
+
+      let armed = false;
+      let flying = false;
+
+      function flyToNav() {
+        if (!armed || flying) return;
+        flying = true;
+
+        // Make nav reserve its space so getBoundingClientRect is correct
+        navLogo.style.opacity = '0';
+        navLogo.style.visibility = 'visible';
+
+        const fromRect = introLogo.getBoundingClientRect();
+        const navSvg = navLogo.querySelector('.sl-logo');
+        const toRect = navSvg.getBoundingClientRect();
+
+        const scale = toRect.width / fromRect.width;
+        const dx = (toRect.left + toRect.width / 2) - (fromRect.left + fromRect.width / 2);
+        const dy = (toRect.top + toRect.height / 2) - (fromRect.top + fromRect.height / 2);
+
+        // Lock current visual state (the reveal animation finished at opacity:1, scale:1, blur:0).
+        // Setting animation:none removes the forwards-held values, so we re-apply them inline.
+        introLogo.style.animation = 'none';
+        introLogo.style.opacity = '1';
+        introLogo.style.filter = 'none';
+        introLogo.style.transform = 'translate(0, 0) scale(1)';
+        introLogo.style.transformOrigin = 'center center';
+        introLogo.style.willChange = 'transform';
+
+        // Force reflow then transition
+        void introLogo.offsetWidth;
+        introLogo.style.transition = 'transform 1.15s cubic-bezier(0.7, 0, 0.2, 1)';
+        intro.classList.add('flying');
+        introLogo.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+
+        const finish = () => {
+          intro.style.display = 'none';
+          document.body.classList.remove('intro-active');
+          navLogo.classList.add('show');
+          navLogo.style.opacity = '';
+          navLogo.style.visibility = '';
+        };
+        introLogo.addEventListener('transitionend', finish, { once: true });
+        // Safety fallback
+        setTimeout(finish, 1500);
+      }
+
+      // Arm flight after the reveal animation completes (~4.4s total)
+      setTimeout(() => {
+        armed = true;
+        const opts = { passive: true };
+        window.addEventListener('wheel', flyToNav, opts);
+        window.addEventListener('touchstart', flyToNav, opts);
+        window.addEventListener('touchmove', flyToNav, opts);
+        window.addEventListener('keydown', flyToNav);
+        intro.addEventListener('click', flyToNav);
+
+        // Auto-fly after 3s in case the user hesitates and thinks it's stuck.
+        setTimeout(flyToNav, 3000);
+      }, 4400);
+    })();
+
+    // ---- Pinned scroll-storytelling for services ----
+    (function initPSR() {
+      const root = document.getElementById('psr-root');
+      const panelsEl = document.getElementById('psr-panels');
+      const railEl = document.getElementById('psr-rail');
+      if (!root || !panelsEl) return;
+
+      // Parse existing .svc-row data so we don't duplicate content.
+      const sourceRows = Array.from(document.querySelectorAll('.svc-rows .svc-row'));
+      if (!sourceRows.length) return;
+
+      // Bullet copy (shared across all panels, kept short and brand-coherent).
+      const defaultBullets = [
+        'Doctor-led consultation',
+        'FDA-recognised technology',
+        'Tailored treatment plan',
+        'Subtle, lasting results'
+      ];
+
+      const data = sourceRows.map((row, i) => {
+        const num = (row.querySelector('.svc-row-num')?.textContent || String(i + 1).padStart(2, '0')).trim();
+        const tag = row.querySelector('.svc-row-tag')?.textContent.trim() || '';
+        const nameEl = row.querySelector('.svc-row-name');
+        const titleHTML = nameEl ? nameEl.innerHTML.trim() : '';
+        const desc = row.querySelector('.svc-row-desc')?.textContent.trim() || '';
+        const link = row.querySelector('.svc-row-link');
+        const ctaHref = link?.getAttribute('href') || '#';
+        const img = row.querySelector('.svc-row-img-wrap img');
+        const imgSrc = img?.getAttribute('src') || '';
+        const imgAlt = img?.getAttribute('alt') || '';
+        const side = row.getAttribute('data-side') || (i % 2 === 0 ? 'left' : 'right');
+        return { num, tag, titleHTML, desc, ctaHref, imgSrc, imgAlt, side };
+      });
+
+      // Build panel DOM.
+      const frag = document.createDocumentFragment();
+      data.forEach((d, i) => {
+        const panel = document.createElement('article');
+        panel.className = 'psr-panel';
+        panel.setAttribute('data-side', d.side);
+        panel.setAttribute('data-i', String(i));
+        panel.setAttribute('aria-hidden', i === 0 ? 'false' : 'true');
+        panel.innerHTML = `
+          <div class="psr-info">
+            <span class="psr-eyebrow">${d.tag}</span>
+            <h3 class="psr-title">${d.titleHTML}</h3>
+            <p class="psr-desc">${d.desc}</p>
+            <ul class="psr-bullets">
+              ${defaultBullets.map(b => `<li>${b}</li>`).join('')}
+            </ul>
+            <a class="psr-cta" href="${d.ctaHref}" target="_blank" rel="noopener">Book treatment <span class="arr">→</span></a>
+          </div>
+          <div class="psr-visual">
+            <div class="psr-img">
+              ${d.imgSrc ? `<img src="${d.imgSrc}" alt="${d.imgAlt}" loading="lazy">` : ''}
+              <div class="psr-img-tag">${d.tag}</div>
+            </div>
+          </div>
+        `;
+        frag.appendChild(panel);
+
+        const dot = document.createElement('div');
+        dot.className = 'psr-rail-dot';
+        dot.setAttribute('data-i', String(i));
+        railEl?.appendChild(dot);
+      });
+      panelsEl.appendChild(frag);
+
+      const panels = Array.from(panelsEl.querySelectorAll('.psr-panel'));
+      const dots = Array.from(railEl?.querySelectorAll('.psr-rail-dot') || []);
+      const N = panels.length;
+
+      // Activate pinned mode (hides legacy svc-rows + filter).
+      document.body.classList.add('psr-active');
+      root.style.setProperty('--psr-count', String(N));
+
+      let currentIdx = -2; // -2 = uninitialised, -1 = explicitly none active
+      function activate(idx) {
+        if (idx !== -1) idx = Math.max(0, Math.min(N - 1, idx));
+        if (idx === currentIdx) return;
+        const prev = currentIdx;
+        currentIdx = idx;
+        panels.forEach((p, i) => {
+          p.classList.toggle('is-active', i === idx);
+          p.classList.toggle('is-prev', prev >= 0 && i === prev && i !== idx);
+          p.setAttribute('aria-hidden', i === idx ? 'false' : 'true');
+        });
+        dots.forEach((d, i) => d.classList.toggle('is-on', i === idx));
+      }
+
+      // Scroll-driven cross-fade. Panel opacity is set continuously via the --p CSS var,
+      // so every scroll input produces a visible change — no dead zones. Progress bar at
+      // the top of the stage gives extra feedback that scroll is registering.
+      const progressBar = document.getElementById('psr-progress');
+      let raf = 0;
+      function setPanelVisibilities(frac) {
+        // Discrete: only the closest panel is visible. Alternating-side layouts mean
+        // overlapping cross-fades looked messy, so we rely on the short CSS transition
+        // (0.18s linear on .psr-panel) to smooth the swap, and on the scroll-progress
+        // bar to give continuous feedback for every scroll input.
+        const idx = Math.round(frac);
+        for (let i = 0; i < N; i++) {
+          panels[i].style.setProperty('--p', i === idx ? '1' : '0');
+        }
+      }
+      function update() {
+        raf = 0;
+        const rect = root.getBoundingClientRect();
+        const stageH = window.innerHeight;
+        const trackH = root.offsetHeight;
+        const total = trackH - stageH;
+        if (total <= 0) { setPanelVisibilities(0); activate(0); return; }
+        // Below the section: everything hidden, progress 0.
+        const enterRange = stageH * 0.85;
+        if (rect.top > enterRange) {
+          for (let i = 0; i < N; i++) panels[i].style.setProperty('--p', '0');
+          activate(-1);
+          if (progressBar) progressBar.style.setProperty('--scroll-p', '0%');
+          return;
+        }
+        // Entering the section (before the stage pins): fade panel 0 in based on entry progress.
+        if (rect.top > 0) {
+          const t = 1 - (rect.top / enterRange);
+          panels[0].style.setProperty('--p', t.toFixed(3));
+          for (let i = 1; i < N; i++) panels[i].style.setProperty('--p', '0');
+          activate(t > 0.5 ? 0 : -1);
+          if (progressBar) progressBar.style.setProperty('--scroll-p', '0%');
+          return;
+        }
+        // Pinned: fractional index drives smooth cross-fade between adjacent panels.
+        const local = Math.min(-rect.top, total);
+        const progress = local / total; // 0..1
+        const frac = progress * (N - 1); // 0..N-1
+        setPanelVisibilities(frac);
+        activate(Math.round(frac));
+        if (progressBar) progressBar.style.setProperty('--scroll-p', (progress * 100).toFixed(2) + '%');
+      }
+      function onScroll() {
+        if (raf) return;
+        raf = requestAnimationFrame(update);
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      // Start with no panel active; first scroll into the track triggers panel 0's entry.
+      requestAnimationFrame(update);
+    })();
+
+    // ---- Vertical service rows: scroll-triggered reveals ----
+    const svcRows = document.querySelectorAll('.svc-row');
+
+    function revealRow(row) {
+      if (row.dataset.revealed) return;
+      row.dataset.revealed = '1';
+      row.classList.add('in');
+    }
+
+    function checkRows() {
+      const vh = window.innerHeight;
+      const triggerLine = vh * 0.85; // reveal once row top crosses 85% of viewport
+      svcRows.forEach(r => {
+        if (r.dataset.revealed) return;
+        const rect = r.getBoundingClientRect();
+        if (rect.top < triggerLine && rect.bottom > 0) revealRow(r);
+      });
+    }
+
+    const rowIO = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          revealRow(e.target);
+          rowIO.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+
+    svcRows.forEach(r => rowIO.observe(r));
+
+    let rowRAF;
+    window.addEventListener('scroll', () => {
+      if (rowRAF) return;
+      rowRAF = requestAnimationFrame(() => { rowRAF = null; checkRows(); });
+    }, { passive: true });
+    requestAnimationFrame(checkRows);
+
+    // ---- Service filter (vertical mode) ----
+    function filter(cat, btn) {
+      document.querySelectorAll('.ftab').forEach(t => t.classList.remove('on'));
+      btn.classList.add('on');
+      svcRows.forEach(row => {
+        const show = cat === 'all' || row.dataset.cat === cat;
+        row.style.display = show ? '' : 'none';
+      });
+      // Re-check rows for any newly visible
+      requestAnimationFrame(checkRows);
+    }
+
+    // ---- Generic .reveal elements ----
+    const revealIO = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 60);
+          revealIO.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revealIO.observe(el));
+
+    // ---- [data-takeover] scroll-in reveals (about, why) ----
+    const takeoverIO = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-takeover');
+          takeoverIO.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -10% 0px' });
+    document.querySelectorAll('[data-takeover]').forEach(el => takeoverIO.observe(el));
+
+    // ---- Unified [data-stagger] section reveals ----
+    document.querySelectorAll('[data-stagger]').forEach(group => {
+      Array.from(group.children).forEach((child, i) => {
+        child.style.setProperty('--i', i);
+      });
+    });
+    const staggerIO = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible');
+          staggerIO.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('[data-stagger]').forEach(el => staggerIO.observe(el));
+  </script>
+
+</body>
+</html>

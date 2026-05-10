@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Local tooling output / review artifacts
+temporary screenshots/
+.playwright-mcp/
+
+# Stray review screenshots and reference media kept locally
+*.mp4
+dribbble-ref.png
+anim-*.png
+after-*.png
+final-*.png
+flight-*.png
+hpin-*.png
+intro-*.png
+svc-*.png
+type-mid.png
+
+# Local plan files / claude artifacts
+plans/
