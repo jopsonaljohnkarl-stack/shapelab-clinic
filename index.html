@@ -790,20 +790,15 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      /* Zoom + anchor to top to crop out the caption baked into the source JPG.
-         Replace with a clean portrait and remove this transform when available. */
-      object-position: center top;
-      transform: scale(1.45);
-      transform-origin: center 18%;
-      filter: brightness(0.95) saturate(0.96) contrast(1.04);
-      transition: transform 8s cubic-bezier(0.22, 1, 0.36, 1);
+      object-position: center;
+      filter: brightness(0.97) saturate(0.97) contrast(1.02);
     }
-    #doctor.is-takeover .doctor-img img { transform: scale(1.5); }
+    /* Subtle vignette only — keep the bottom plate readable. */
     .doctor-img::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, transparent 55%, rgba(13,11,12,0.45) 100%);
+      background: radial-gradient(ellipse 90% 80% at 50% 40%, transparent 60%, rgba(13,11,12,0.18) 100%);
       pointer-events: none;
     }
     .doctor-info { position: relative; max-width: 620px; }
