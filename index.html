@@ -670,6 +670,212 @@
       max-width: 560px;
     }
 
+    /* ============ DOCTOR / MEET YOUR DOCTOR ============ */
+    #doctor {
+      background: var(--obsidian);
+      padding: 110px 56px;
+      display: grid;
+      grid-template-columns: 0.85fr 1.05fr;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    #doctor::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 60% at 15% 50%, rgba(201,168,76,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 45% 55% at 90% 50%, rgba(201,168,76,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .doctor-frame {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      max-width: 460px;
+      width: 100%;
+      margin-left: auto;
+    }
+    .doctor-frame::before {
+      /* Floating thin gold frame, offset behind the image */
+      content: '';
+      position: absolute;
+      inset: -16px -16px 16px 16px;
+      border: 1px solid rgba(201,168,76,0.32);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .doctor-img {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border: 1px solid rgba(201,168,76,0.18);
+      box-shadow: 0 28px 60px rgba(0,0,0,0.35), 0 0 60px rgba(201,168,76,0.05);
+      z-index: 1;
+    }
+    .doctor-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 18%;
+      filter: brightness(0.95) saturate(0.96) contrast(1.04);
+      transition: transform 8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #doctor.is-takeover .doctor-img img { transform: scale(1.05); }
+    .doctor-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 55%, rgba(13,11,12,0.45) 100%);
+      pointer-events: none;
+    }
+    .doctor-credline {
+      position: absolute;
+      left: 16px;
+      bottom: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      background: rgba(13,11,12,0.65);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(201,168,76,0.32);
+      font-size: 0.62rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--warm-white);
+      z-index: 2;
+    }
+    .doctor-credline::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 10px rgba(201,168,76,0.6);
+    }
+
+    .doctor-info { position: relative; max-width: 620px; }
+    .doctor-info .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .doctor-info .section-label::before {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: var(--gold);
+    }
+    .doctor-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--warm-white);
+      margin-bottom: 14px;
+    }
+    .doctor-name em {
+      font-style: italic;
+      background: linear-gradient(135deg, #b8963e 0%, #e8d080 50%, #c9a84c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .doctor-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 1.3vw, 1.25rem);
+      color: var(--gold);
+      margin-bottom: 22px;
+      line-height: 1.4;
+    }
+    .doctor-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .doctor-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border: 1px solid rgba(201,168,76,0.4);
+      font-size: 0.62rem;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(201,168,76,0.05);
+    }
+    .doctor-pill::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
+    .doctor-bio {
+      font-size: clamp(0.96rem, 1.1vw, 1.05rem);
+      font-weight: 400;
+      line-height: 1.8;
+      color: rgba(245,237,224,0.74);
+      margin-bottom: 16px;
+    }
+    .doctor-bio:last-of-type { margin-bottom: 32px; }
+
+    .doctor-timeline {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 36px;
+      border-top: 1px solid rgba(201,168,76,0.1);
+    }
+    .doctor-timeline li {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 18px;
+      align-items: baseline;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .doctor-timeline .yr {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--gold);
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+    .doctor-timeline .what {
+      font-size: 0.84rem;
+      letter-spacing: 0.02em;
+      color: rgba(245,237,224,0.78);
+      line-height: 1.4;
+    }
+
+    @media (max-width: 900px) {
+      #doctor {
+        grid-template-columns: 1fr;
+        padding: 80px 28px;
+        gap: 36px;
+      }
+      .doctor-frame { max-width: 360px; margin: 0 auto; }
+      .doctor-frame::before { inset: -10px -10px 10px 10px; }
+      .doctor-info { max-width: none; }
+      .doctor-timeline li { grid-template-columns: 64px 1fr; gap: 14px; padding: 12px 0; }
+      .doctor-timeline .yr { font-size: 1.15rem; }
+      .doctor-timeline .what { font-size: 0.78rem; }
+    }
+    @media (max-width: 480px) {
+      #doctor { padding: 64px 22px; }
+      .doctor-frame { max-width: 100%; }
+    }
+
     /* ============ SERVICES (vertical scroll-reveal rows) ============ */
     #services {
       background: var(--obsidian);
@@ -1945,6 +2151,7 @@
       </svg>
     </a>
     <ul class="nav-links">
+      <li><a href="#doctor">Doctor</a></li>
       <li><a href="#services">Services</a></li>
       <li><a href="#why">Why Us</a></li>
       <li><a href="#consult">Consult</a></li>
@@ -2027,6 +2234,41 @@
       <p class="about-text">
         Located in the heart of Puerto Princesa City, ShapeLab Aesthetic Clinic is a doctor-led center dedicated to non-surgical body sculpting, skin renewal, and holistic wellness. Every treatment begins with a complimentary body composition analysis and a personalized consultation — because your journey is uniquely yours.
       </p>
+    </div>
+  </section>
+
+  <div class="shimmer-bar"></div>
+
+  <!-- ===== MEET YOUR DOCTOR ===== -->
+  <section id="doctor" data-stagger data-takeover aria-label="Meet your doctor">
+    <div class="doctor-frame">
+      <div class="doctor-img">
+        <img src="brandassets/doctor.jpg" alt="Dr. Katherine E. Hernandez — UK-registered medical doctor" loading="lazy">
+        <span class="doctor-credline">Dr. Katherine E. Hernandez</span>
+      </div>
+    </div>
+    <div class="doctor-info">
+      <div class="section-label">Meet Your Doctor</div>
+      <h2 class="doctor-name">Dr. Katherine E. <em>Hernandez</em></h2>
+      <p class="doctor-subtitle">Where science meets artistry — UK-registered medical doctor &amp; aesthetic medicine specialist.</p>
+      <div class="doctor-pills">
+        <span class="doctor-pill">UK-Registered · 2023</span>
+        <span class="doctor-pill">Aesthetic Medicine · 2025</span>
+        <span class="doctor-pill">PALAA Member</span>
+      </div>
+      <p class="doctor-bio">
+        With a foundation rooted in nursing, Dr. Hernandez built a deep understanding of patient care — one that now defines her refined and meticulous approach to aesthetics. After earning her medical degree and passing the Physician Licensure Examination in 2019, she elevated her credentials internationally, becoming a UK-registered doctor in 2023.
+      </p>
+      <p class="doctor-bio">
+        Her passion for advanced aesthetic treatments led her to specialize in Aesthetic Medicine in 2025. She is an active member of the Philippine Academy of Aesthetic and Age Management Inc. At ShapeLab, she curates each treatment with intention — blending medical precision with aesthetic vision to sculpt, enhance, and refine natural beauty.
+      </p>
+      <ul class="doctor-timeline">
+        <li><span class="yr">2019</span><span class="what">Medical degree · Passed Physician Licensure Examination</span></li>
+        <li><span class="yr">2023</span><span class="what">UK-Registered Medical Doctor</span></li>
+        <li><span class="yr">2025</span><span class="what">Specialization in Aesthetic Medicine</span></li>
+        <li><span class="yr">Now</span><span class="what">Active member · Philippine Academy of Aesthetic and Age Management Inc.</span></li>
+      </ul>
+      <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener" class="btn-gold">Book a Consultation</a>
     </div>
   </section>
 
