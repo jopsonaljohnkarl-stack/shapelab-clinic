@@ -1,0 +1,32 @@
+# Allow all crawlers (Google, Bing, etc.) full access.
+User-agent: *
+Allow: /
+
+# Explicitly allow Facebook / Meta / Messenger / Instagram link preview scrapers.
+# Without this, Vercel's edge bot protection returns 403 to facebookexternalhit
+# and OG link previews break in Messenger / FB feed / IG.
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: facebookcatalog
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: Discordbot
+Allow: /
+
+Sitemap: https://shapelab-clinic.vercel.app/sitemap.xml
