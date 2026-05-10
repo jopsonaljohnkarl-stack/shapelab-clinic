@@ -161,6 +161,9 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+    /* Image reset (replaces Tailwind preflight after CDN removal):
+       prevents <img> width attributes from blowing out their containers. */
+    img, svg, video { max-width: 100%; }
     /* In-page anchor links land below the fixed banner + navbar instead of underneath. */
     #about, #doctor, #services, #journey, #testimonials, #faq, #consult, #contact { scroll-margin-top: 110px; }
     @media (max-width: 768px) { #about, #doctor, #services, #journey, #testimonials, #faq, #consult, #contact { scroll-margin-top: 96px; } }
@@ -1856,6 +1859,7 @@
     }
     .footer-logo:hover { transform: translateY(-2px); filter: drop-shadow(0 4px 18px rgba(201,168,76,0.25)); }
     .footer-logo img {
+      width: auto;
       height: 54px;
       object-fit: contain;
       object-position: left center;
