@@ -28,3 +28,4 @@ type-mid.png
 
 # Local plan files / claude artifacts
 plans/
+.vercel
