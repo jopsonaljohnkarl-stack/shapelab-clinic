@@ -1640,22 +1640,60 @@
     }
 
     @media (max-width: 900px) {
-      .psr-track { height: calc((var(--psr-count, 1) - 1) * 95vh + 100vh); }
-      .psr-stage { align-items: flex-start; padding-top: 80px; }
-      .psr-panels { padding: 0 24px; height: auto; max-height: none; }
-      .psr-panel {
-        grid-template-columns: 1fr;
-        gap: 26px;
-        align-content: start;
+      /* Mobile: drop the pinned-storytelling pattern entirely. Pinned scroll fights
+         with mobile chrome (URL bar resizing, soft keyboard, viewport math), and the
+         alternating grid layout doesn't translate to a phone width. Instead, stack
+         panels vertically and let them flow with normal scroll. */
+      .psr-track {
+        height: auto !important;
+        --psr-count: 1; /* avoids any 100vh-per-panel calc bleeding through */
       }
+      .psr-stage {
+        position: relative;
+        height: auto;
+        padding: 0;
+        overflow: visible;
+        display: block;
+      }
+      .psr-stage::before, .psr-stage::after { display: none; }
+      .psr-progress, .psr-rail { display: none; }
+      .psr-panels {
+        position: relative;
+        height: auto;
+        max-height: none;
+        padding: 24px 22px 64px;
+      }
+      .psr-panel {
+        position: relative;
+        inset: auto;
+        grid-template-columns: 1fr;
+        gap: 22px;
+        padding: 56px 0;
+        opacity: 1 !important;
+        transform: none !important;
+        pointer-events: auto !important;
+        border-bottom: 1px solid rgba(201,168,76,0.08);
+      }
+      .psr-panel:first-child { padding-top: 8px; }
+      .psr-panel:last-child { border-bottom: none; }
       .psr-panel[data-side="right"] .psr-visual { order: 0; }
-      .psr-counter { right: 24px; top: 26px; }
-      .psr-rail { left: 14px; }
-      .psr-img { aspect-ratio: 5/4; max-height: 36vh; }
-      .psr-title { font-size: clamp(2rem, 7vw, 3rem); margin-bottom: 14px; }
-      .psr-desc { margin-bottom: 16px; }
-      .psr-bullets { margin-bottom: 20px; }
-      .psr-bullets li { padding: 7px 0 7px 18px; font-size: 0.66rem; }
+      /* Force per-element states to fully visible on mobile (no scroll-driven hiding). */
+      .psr-info > * {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .psr-visual {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .psr-img { aspect-ratio: 4/5; max-height: none; }
+      .psr-title { font-size: clamp(2rem, 7vw, 2.8rem); margin-bottom: 14px; }
+      .psr-desc { margin-bottom: 18px; }
+      .psr-bullets { margin-bottom: 22px; }
+      .psr-bullets li { padding: 9px 0 9px 22px; font-size: 0.74rem; }
+      .psr-eyebrow { font-size: 0.7rem; letter-spacing: 0.3em; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1800,9 +1838,13 @@
       #navbar { padding: 16px 20px; }
       .nav-logo .sl-logo { height: 36px; }
       .hero-content { padding: 0 20px; padding-top: 80px; }
-      .hero-stats { grid-template-columns: 1fr 1fr; }
-      .stat-cell { padding: 14px 16px; }
-      .hero-btns { flex-direction: column; }
+      /* 3 stats — keep all three on one row at narrow widths instead of 2+1 wonkiness */
+      .hero-stats { grid-template-columns: repeat(3, 1fr); }
+      .stat-cell { padding: 14px 10px; }
+      .stat-num { font-size: 1.5rem; }
+      .stat-lbl { font-size: 0.58rem; letter-spacing: 0.12em; }
+      .hero-btns { flex-direction: column; margin-bottom: 32px; }
+      .hero-btns > .btn-gold, .hero-btns > .btn-ghost { width: 100%; }
       .svc-row-name { font-size: 2.6rem; }
     }
   </style>
