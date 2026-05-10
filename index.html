@@ -1677,17 +1677,33 @@
       .psr-panel:first-child { padding-top: 8px; }
       .psr-panel:last-child { border-bottom: none; }
       .psr-panel[data-side="right"] .psr-visual { order: 0; }
-      /* Force per-element states to fully visible on mobile (no scroll-driven hiding). */
+      /* Mobile: scroll-into-view fade-up driven by IntersectionObserver.
+         The .mobile-reveal class is added when each panel enters the viewport. */
       .psr-info > * {
-        opacity: 1 !important;
-        transform: none !important;
-        transition: none !important;
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+          transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
       }
       .psr-visual {
-        opacity: 1 !important;
-        transform: none !important;
-        transition: none !important;
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+          opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.18s,
+          transform 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.18s;
       }
+      .psr-panel.mobile-reveal .psr-info > * {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .psr-panel.mobile-reveal .psr-info > *:nth-child(1) { transition-delay: 0.05s; }
+      .psr-panel.mobile-reveal .psr-info > *:nth-child(2) { transition-delay: 0.13s; }
+      .psr-panel.mobile-reveal .psr-info > *:nth-child(3) { transition-delay: 0.21s; }
+      .psr-panel.mobile-reveal .psr-info > *:nth-child(4) { transition-delay: 0.29s; }
+      .psr-panel.mobile-reveal .psr-info > *:nth-child(5) { transition-delay: 0.37s; }
+      .psr-panel.mobile-reveal .psr-info > *:nth-child(6) { transition-delay: 0.45s; }
+      .psr-panel.mobile-reveal .psr-visual { opacity: 1; transform: translateY(0); }
       .psr-img { aspect-ratio: 4/5; max-height: none; }
       .psr-title { font-size: clamp(2rem, 7vw, 2.8rem); margin-bottom: 14px; }
       .psr-desc { margin-bottom: 18px; }
@@ -1834,13 +1850,21 @@
       .hero-deco { display: none; }
       .intro-cue { bottom: 36px; }
     }
+    @media (max-width: 768px) {
+      /* Stats stop being absolute-positioned so they don't overlap content above
+         on phones with shorter viewports (iPhone SE, etc.). They flow below the
+         hero content instead. */
+      #hero { min-height: auto; padding-bottom: 0; }
+      .hero-content { padding-top: 110px; padding-bottom: 40px; }
+      .hero-stats { position: relative; bottom: auto; }
+    }
     @media (max-width: 480px) {
       #navbar { padding: 16px 20px; }
       .nav-logo .sl-logo { height: 36px; }
-      .hero-content { padding: 0 20px; padding-top: 80px; }
+      .hero-content { padding: 110px 20px 40px; }
       /* 3 stats — keep all three on one row at narrow widths instead of 2+1 wonkiness */
       .hero-stats { grid-template-columns: repeat(3, 1fr); }
-      .stat-cell { padding: 14px 10px; }
+      .stat-cell { padding: 16px 10px; }
       .stat-num { font-size: 1.5rem; }
       .stat-lbl { font-size: 0.58rem; letter-spacing: 0.12em; }
       .hero-btns { flex-direction: column; margin-bottom: 32px; }
@@ -2707,6 +2731,24 @@
       }
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll);
+
+      // Mobile (≤900px): pinned scroll is disabled in CSS; reveal each panel via
+      // IntersectionObserver instead, so content fades up as it scrolls into view.
+      const isMobile = window.matchMedia('(max-width: 900px)');
+      function setupMobileReveals() {
+        if (!isMobile.matches) return;
+        const panelIO = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              e.target.classList.add('mobile-reveal');
+              panelIO.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.18, rootMargin: '0px 0px -10% 0px' });
+        panels.forEach(p => panelIO.observe(p));
+      }
+      setupMobileReveals();
+
       // Start with no panel active; first scroll into the track triggers panel 0's entry.
       requestAnimationFrame(update);
     })();
