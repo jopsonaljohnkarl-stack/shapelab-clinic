@@ -81,6 +81,64 @@
   }
   </script>
 
+  <!-- FAQ schema (eligible for Google rich results) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Are the treatments safe?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Every treatment at ShapeLab is doctor-led — designed and supervised by Dr. Katherine E. Hernandez, a UK-registered medical doctor and Aesthetic Medicine specialist. We use FDA-recognised devices and clinical-grade products only, and every patient receives a full consultation and body composition assessment before anything is administered."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Will it hurt? What's the downtime?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most treatments are non-surgical and minimally invasive. Discomfort is typically mild and topical numbing is applied where appropriate. Downtime varies by treatment — many have none, a few have 24–72 hours of mild redness or swelling."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I know which treatment is right for me?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tell us your goals at the free initial consultation and Dr. Hernandez will recommend a personalised treatment plan based on your concerns, body composition, and what's clinically right for you. No pressure to commit."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How soon will I see results?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It depends on the treatment. IV drip therapy and signature facials show effects within 24 hours. Microneedling or body contouring build gradually over 4–8 weeks as collagen rebuilds. Your plan includes a realistic timeline and check-in milestones."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I combine treatments?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes — and we often recommend it. Aesthetic results compound when treatments are layered intelligently. Your personalised plan sequences treatments in the right order with the right gaps between them."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much does it cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Pricing depends on the treatment and your personalised plan. The initial consultation and body composition analysis are complimentary — there's no obligation to proceed afterwards. We offer phased plans for patients who'd rather pace investment over time."
+        }
+      }
+    ]
+  }
+  </script>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
@@ -101,8 +159,8 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     /* In-page anchor links land below the fixed banner + navbar instead of underneath. */
-    #about, #doctor, #services, #why, #consult, #contact { scroll-margin-top: 110px; }
-    @media (max-width: 768px) { #about, #doctor, #services, #why, #consult, #contact { scroll-margin-top: 96px; } }
+    #about, #doctor, #services, #why, #faq, #consult, #contact { scroll-margin-top: 110px; }
+    @media (max-width: 768px) { #about, #doctor, #services, #why, #faq, #consult, #contact { scroll-margin-top: 96px; } }
 
     body {
       background: var(--obsidian);
@@ -1388,6 +1446,158 @@
       color: rgba(245,237,224,0.7);
     }
 
+    /* ============ FAQ ============ */
+    #faq {
+      background: var(--obsidian-2);
+      padding: 110px 56px;
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 80px;
+      align-items: start;
+      position: relative;
+      overflow: hidden;
+    }
+    #faq::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 50% 60% at 12% 30%, rgba(201,168,76,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 45% 55% at 90% 80%, rgba(201,168,76,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .faq-intro { position: relative; max-width: 460px; }
+    .faq-intro .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .faq-intro .section-label::before {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: var(--gold);
+    }
+    .faq-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--warm-white);
+      margin-bottom: 22px;
+    }
+    .faq-heading em {
+      font-style: italic;
+      background: linear-gradient(135deg, #b8963e 0%, #e8d080 50%, #c9a84c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .faq-sub {
+      font-size: clamp(0.96rem, 1.1vw, 1.05rem);
+      font-weight: 400;
+      line-height: 1.75;
+      color: rgba(245,237,224,0.7);
+      margin-bottom: 28px;
+    }
+    .faq-help {
+      font-size: 0.74rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(245,237,224,0.55);
+      padding-top: 24px;
+      border-top: 1px solid rgba(201,168,76,0.1);
+    }
+    .faq-help a {
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(201,168,76,0.3);
+      padding-bottom: 1px;
+      transition: border-color 0.3s ease;
+    }
+    .faq-help a:hover { border-color: var(--gold); }
+
+    .faq-list {
+      position: relative;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-top: 1px solid rgba(201,168,76,0.12);
+    }
+    .faq-item {
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+    }
+    .faq-q {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      padding: 24px 4px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+      font-weight: 400;
+      line-height: 1.3;
+      color: var(--warm-white);
+      transition: color 0.3s ease;
+    }
+    .faq-q::-webkit-details-marker { display: none; }
+    .faq-q::marker { display: none; content: ''; }
+    .faq-q:hover { color: var(--gold); }
+    .faq-q-icon {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(201,168,76,0.32);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), background 0.4s ease, border-color 0.4s ease;
+    }
+    .faq-q-icon::before, .faq-q-icon::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 1px;
+      background: currentColor;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .faq-q-icon { position: relative; }
+    .faq-q-icon::after { transform: rotate(90deg); }
+    details[open] .faq-q-icon {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--obsidian);
+    }
+    details[open] .faq-q-icon::after { transform: rotate(0deg); }
+    .faq-a {
+      padding: 0 4px 26px;
+      max-width: 720px;
+      font-size: 0.96rem;
+      font-weight: 400;
+      line-height: 1.8;
+      color: rgba(245,237,224,0.74);
+    }
+    .faq-a p + p { margin-top: 12px; }
+
+    @media (max-width: 900px) {
+      #faq {
+        grid-template-columns: 1fr;
+        gap: 36px;
+        padding: 80px 28px;
+      }
+      .faq-intro { max-width: none; }
+      .faq-q { padding: 20px 4px; }
+      .faq-q-icon { width: 28px; height: 28px; }
+    }
+    @media (max-width: 480px) {
+      #faq { padding: 64px 22px; }
+    }
+
     /* ============ CONSULTATION BAND ============ */
     #consult {
       padding: 96px 56px;
@@ -2323,6 +2533,7 @@
       <li><a href="#doctor">Meet Your Doctor</a></li>
       <li><a href="#services">Services</a></li>
       <li><a href="#why">Why Us</a></li>
+      <li><a href="#faq">FAQ</a></li>
       <li><a href="#consult">Consult</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -2793,6 +3004,76 @@
         <div class="why-heading">Tailored to You</div>
         <div class="why-text">No cookie-cutter plans. Your complimentary body composition analysis and in-depth consultation build a roadmap that's specific to your body, your timeline, and your confidence.</div>
       </div>
+    </div>
+  </section>
+
+  <div class="shimmer-bar"></div>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq" data-stagger data-takeover aria-label="Frequently asked questions">
+    <div class="faq-intro">
+      <div class="section-label">Common Questions</div>
+      <h2 class="faq-heading">Answers Before <em>You Ask</em></h2>
+      <p class="faq-sub">Most first-time patients have the same questions before they walk in. Here's what we'd want you to know — and you'll get personalised answers in your free initial consultation.</p>
+      <div class="faq-help">
+        Still curious? <a href="https://wa.me/639294823347?text=Hi%20ShapeLab%2C%20I%27d%20like%20to%20ask%20about%20your%20treatments." target="_blank" rel="noopener">Message us on WhatsApp</a> or <a href="https://book.easethetics.ph/ojKt8cNA/" target="_blank" rel="noopener">book a free consultation</a>.
+      </div>
+    </div>
+    <div class="faq-list" role="list">
+      <details class="faq-item" role="listitem">
+        <summary class="faq-q">
+          <span>Are the treatments safe?</span>
+          <span class="faq-q-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="faq-a">
+          <p>Every treatment at ShapeLab is doctor-led — designed and supervised by Dr. Katherine E. Hernandez, a UK-registered medical doctor and Aesthetic Medicine specialist. We use FDA-recognised devices and clinical-grade products only, and every patient receives a full consultation and body composition assessment before anything is administered.</p>
+        </div>
+      </details>
+      <details class="faq-item" role="listitem">
+        <summary class="faq-q">
+          <span>Will it hurt? What's the downtime?</span>
+          <span class="faq-q-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="faq-a">
+          <p>Most of our treatments are non-surgical and minimally invasive. Discomfort is typically mild — closer to a sensation than a pain — and topical numbing is applied where appropriate. Downtime varies by treatment: many have none at all (you can return to work or social plans the same day); a few have 24–72 hours of mild redness or swelling. Your doctor will walk you through exactly what to expect for the treatment you're considering.</p>
+        </div>
+      </details>
+      <details class="faq-item" role="listitem">
+        <summary class="faq-q">
+          <span>How do I know which treatment is right for me?</span>
+          <span class="faq-q-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="faq-a">
+          <p>You don't need to know — that's the point of the free initial consultation. Tell us your goals (smoother skin, more contoured body, more energy, more confidence), and Dr. Hernandez will recommend a personalised treatment plan based on your concerns, your body composition, and what's clinically right for you. There's no pressure to commit, and many patients leave with a phased plan they can pace at their own comfort.</p>
+        </div>
+      </details>
+      <details class="faq-item" role="listitem">
+        <summary class="faq-q">
+          <span>How soon will I see results?</span>
+          <span class="faq-q-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="faq-a">
+          <p>It depends on the treatment. Some — like IV drip therapy or signature facials — show effects within 24 hours. Others, like microneedling or body contouring, build gradually over 4–8 weeks as collagen rebuilds and tissues respond. Your treatment plan will include a realistic timeline and check-in milestones so you know what to expect at each stage.</p>
+        </div>
+      </details>
+      <details class="faq-item" role="listitem">
+        <summary class="faq-q">
+          <span>Can I combine treatments?</span>
+          <span class="faq-q-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="faq-a">
+          <p>Yes — and very often we recommend it. Aesthetic results compound when treatments are layered intelligently. For example, body contouring pairs well with skin tightening; microneedling pairs well with topical actives. Your personalised plan will sequence treatments in the right order, with the right gaps between them, to maximise results without overlapping recovery windows.</p>
+        </div>
+      </details>
+      <details class="faq-item" role="listitem">
+        <summary class="faq-q">
+          <span>How much does it cost?</span>
+          <span class="faq-q-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="faq-a">
+          <p>Pricing depends on the treatment and your personalised plan. The <em>initial consultation and body composition analysis are complimentary</em> — there's no obligation to proceed afterwards. During the consultation we'll go through pricing transparently for the treatments that fit your goals, and we offer phased plans for patients who'd rather pace investment over time.</p>
+        </div>
+      </details>
     </div>
   </section>
 
