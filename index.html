@@ -1495,84 +1495,134 @@
       position: relative;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 28px;
+      gap: 16px;
       max-width: 1240px;
       margin: 0 auto;
-    }
-    /* Connecting line behind step numbers (desktop only) */
-    .journey-steps::before {
-      content: '';
-      position: absolute;
-      top: 38px;
-      left: 12.5%;
-      right: 12.5%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent 0%, rgba(201,168,76,0.22) 12%, rgba(201,168,76,0.22) 88%, transparent 100%);
-      z-index: 0;
+      list-style: none;
+      padding: 0;
     }
     .journey-step {
       position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 0 12px;
+      padding: 28px 26px 30px;
+      background:
+        linear-gradient(165deg, rgba(201,168,76,0.05) 0%, rgba(201,168,76,0) 55%),
+        var(--obsidian-2);
+      border: 1px solid rgba(201,168,76,0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      text-align: left;
+      transition: border-color 0.45s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease, background 0.45s ease;
     }
-    .journey-step-num {
-      width: 76px;
-      height: 76px;
-      border-radius: 50%;
-      background: var(--obsidian);
-      border: 1px solid rgba(201,168,76,0.32);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 24px;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.6rem;
-      font-weight: 400;
-      letter-spacing: 0.05em;
-      color: var(--gold);
-      position: relative;
-    }
-    .journey-step-num::before {
+    .journey-step::after {
+      /* Top-right gold corner mark — subtle luxury detail */
       content: '';
       position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      border: 1px solid rgba(201,168,76,0.1);
+      top: 0;
+      right: 0;
+      width: 24px;
+      height: 24px;
+      border-top: 1px solid rgba(201,168,76,0.5);
+      border-right: 1px solid rgba(201,168,76,0.5);
+      pointer-events: none;
+      transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1), height 0.45s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.45s ease;
+    }
+    .journey-step:hover {
+      border-color: rgba(201,168,76,0.28);
+      transform: translateY(-3px);
+      box-shadow: 0 18px 38px rgba(0,0,0,0.42);
+      background:
+        linear-gradient(165deg, rgba(201,168,76,0.08) 0%, rgba(201,168,76,0) 55%),
+        var(--obsidian-2);
+    }
+    .journey-step:hover::after {
+      width: 38px;
+      height: 38px;
+      border-color: var(--gold);
+    }
+
+    .journey-step-num {
+      display: inline-flex;
+      align-items: center;
+      align-self: flex-start;
+      padding: 5px 12px;
+      border: 1px solid rgba(201,168,76,0.32);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      color: var(--gold);
+      background: rgba(13,11,12,0.55);
+      width: auto;
+      height: auto;
+      border-radius: 0;
+      margin-bottom: 0;
+      box-shadow: none;
     }
     .journey-step-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+      font-size: clamp(1.15rem, 1.45vw, 1.35rem);
       font-weight: 400;
       color: var(--warm-white);
-      margin-bottom: 12px;
       line-height: 1.25;
+      letter-spacing: -0.005em;
+      margin: 4px 0 0;
+      position: relative;
+      padding-bottom: 14px;
+    }
+    .journey-step-title::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 26px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.55;
     }
     .journey-step-body {
-      font-size: 0.92rem;
+      font-size: 0.86rem;
       font-weight: 400;
       line-height: 1.7;
-      color: rgba(245,237,224,0.65);
-      max-width: 240px;
-      margin: 0 auto;
+      color: rgba(245,237,224,0.62);
+      max-width: none;
+      margin: 0;
     }
 
     @media (max-width: 900px) {
       #journey { padding: 80px 28px; }
-      .journey-head { margin-bottom: 48px; }
+      .journey-head { margin-bottom: 40px; }
       .journey-steps {
         grid-template-columns: 1fr;
-        gap: 36px;
+        gap: 12px;
       }
-      .journey-steps::before { display: none; }
-      .journey-step { display: grid; grid-template-columns: 76px 1fr; gap: 22px; text-align: left; align-items: start; padding: 0; }
-      .journey-step-num { margin-bottom: 0; }
-      .journey-step-body { max-width: none; }
+      .journey-step {
+        flex-direction: row;
+        gap: 18px;
+        padding: 20px 22px;
+        align-items: stretch;
+      }
+      .journey-step::after { width: 18px; height: 18px; }
+      .journey-step-num {
+        align-self: stretch;
+        flex-shrink: 0;
+        padding: 6px 10px;
+        font-size: 0.85rem;
+      }
+      .journey-step-content {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+      }
+      .journey-step-title { font-size: 1.05rem; padding-bottom: 0; }
+      .journey-step-title::after { display: none; }
+      .journey-step-body { font-size: 0.82rem; line-height: 1.6; }
     }
     @media (max-width: 480px) {
       #journey { padding: 64px 22px; }
-      .journey-step { grid-template-columns: 60px 1fr; gap: 16px; }
-      .journey-step-num { width: 60px; height: 60px; font-size: 1.3rem; }
+      .journey-step { padding: 18px 18px; gap: 14px; }
+      .journey-step-num { font-size: 0.78rem; padding: 6px 9px; }
     }
 
     /* ============ FAQ ============ */
@@ -3056,26 +3106,34 @@
       <h2 class="journey-title">Your Journey, <em>Step by Step</em></h2>
       <p class="journey-sub">Aesthetic medicine should feel considered, not rushed. Every patient at ShapeLab follows the same four-step path — designed by Dr. Hernandez to keep treatment safe, personalised, and accountable.</p>
     </div>
-    <ol class="journey-steps">
+    <ol class="journey-steps" data-stagger>
       <li class="journey-step">
         <div class="journey-step-num">01</div>
-        <h3 class="journey-step-title">Free Consultation</h3>
-        <p class="journey-step-body">Tell us your goals. We'll review your medical history, lifestyle, and concerns — then run a complimentary body composition analysis.</p>
+        <div class="journey-step-content">
+          <h3 class="journey-step-title">Free Consultation</h3>
+          <p class="journey-step-body">Tell us your goals. We'll review your medical history, lifestyle, and concerns — then run a complimentary body composition analysis.</p>
+        </div>
       </li>
       <li class="journey-step">
         <div class="journey-step-num">02</div>
-        <h3 class="journey-step-title">Personalised Plan</h3>
-        <p class="journey-step-body">Dr. Hernandez maps a phased treatment plan tailored to your goals, timeline, and budget. No pressure, no upsell — just a clear path.</p>
+        <div class="journey-step-content">
+          <h3 class="journey-step-title">Personalised Plan</h3>
+          <p class="journey-step-body">Dr. Hernandez maps a phased plan tailored to your goals, timeline, and budget. No pressure, no upsell — just a clear path.</p>
+        </div>
       </li>
       <li class="journey-step">
         <div class="journey-step-num">03</div>
-        <h3 class="journey-step-title">Treatment</h3>
-        <p class="journey-step-body">Doctor-supervised, FDA-recognised procedures performed in our Puerto Princesa clinic. You're informed and comfortable at every step.</p>
+        <div class="journey-step-content">
+          <h3 class="journey-step-title">Treatment</h3>
+          <p class="journey-step-body">Doctor-supervised, FDA-recognised procedures performed in our Puerto Princesa clinic. You're informed and comfortable at every step.</p>
+        </div>
       </li>
       <li class="journey-step">
         <div class="journey-step-num">04</div>
-        <h3 class="journey-step-title">Follow-up &amp; Refine</h3>
-        <p class="journey-step-body">Scheduled check-ins to track progress, adjust the plan as your body responds, and celebrate the subtle changes that lead to real results.</p>
+        <div class="journey-step-content">
+          <h3 class="journey-step-title">Follow-up &amp; Refine</h3>
+          <p class="journey-step-body">Scheduled check-ins to track progress, adjust the plan as your body responds, and refine results over time.</p>
+        </div>
       </li>
     </ol>
   </section>
