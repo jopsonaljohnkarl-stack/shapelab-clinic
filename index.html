@@ -2392,6 +2392,19 @@
         cursor: pointer;
         transition: border-color 0.4s ease, background 0.4s ease;
       }
+      /* Force the desktop's PSR-driven hidden states to be ignored on mobile —
+         every child of every panel is visible. PSR pinned-scroll is mobile-disabled. */
+      .psr-panel .psr-info > * {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .psr-panel .psr-visual {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .psr-panel .psr-img img { transform: none !important; }
       .psr-panel:hover { border-color: rgba(201,168,76,0.22); }
       .psr-panel[data-side="right"] .psr-visual { order: 0; }
 
