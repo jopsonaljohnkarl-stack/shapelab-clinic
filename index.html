@@ -159,8 +159,8 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     /* In-page anchor links land below the fixed banner + navbar instead of underneath. */
-    #about, #doctor, #services, #journey, #why, #faq, #consult, #contact { scroll-margin-top: 110px; }
-    @media (max-width: 768px) { #about, #doctor, #services, #journey, #why, #faq, #consult, #contact { scroll-margin-top: 96px; } }
+    #about, #doctor, #services, #journey, #testimonials, #faq, #consult, #contact { scroll-margin-top: 110px; }
+    @media (max-width: 768px) { #about, #doctor, #services, #journey, #testimonials, #faq, #consult, #contact { scroll-margin-top: 96px; } }
 
     body {
       background: var(--obsidian);
@@ -754,128 +754,60 @@
       100% { background-position: -200% center; }
     }
 
-    /* ============ ABOUT BAND ============ */
+    /* ============ ABOUT BAND — single centred brand quote ============ */
     #about {
       background: var(--obsidian-2);
-      padding: 80px 56px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
+      padding: 96px 56px;
+      display: flex;
       align-items: center;
-    }
-
-    .about-quote {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.9rem, 3.5vw, 3rem);
-      font-weight: 300;
-      font-style: italic;
-      line-height: 1.28;
-      color: var(--warm-white);
+      justify-content: center;
       position: relative;
-      padding-left: 32px;
+      overflow: hidden;
     }
-    .about-quote::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 8px; bottom: 8px;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--gold), transparent);
-    }
-    .about-quote em { color: var(--gold); font-style: italic; }
-
-    .about-right {}
-    .about-lbl {
-      font-size: 0.72rem;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 22px;
-    }
-    .about-heading {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2rem, 4vw, 3.4rem);
-      font-weight: 400;
-      color: var(--warm-white);
-      margin-bottom: 22px;
-      line-height: 1.15;
-      letter-spacing: -0.015em;
-    }
-    .about-text {
-      font-size: clamp(1rem, 1.2vw, 1.15rem);
-      font-weight: 400;
-      line-height: 1.75;
-      color: rgba(245,237,224,0.74);
-      max-width: 560px;
-    }
-
-    /* ============ PROMISE STRIP — "what's included with your first visit" ============ */
-    .promise-strip {
-      background: var(--obsidian);
-      border-top: 1px solid rgba(201,168,76,0.1);
-      border-bottom: 1px solid rgba(201,168,76,0.1);
-      padding: 22px 56px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
-      position: relative;
-    }
-    .promise-strip::before {
+    #about::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse 60% 100% at 50% 50%, rgba(201,168,76,0.04) 0%, transparent 70%);
+      background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(201,168,76,0.05) 0%, transparent 65%);
       pointer-events: none;
     }
-    .promise-cell {
-      display: flex;
-      align-items: center;
-      gap: 14px;
+    .about-quote {
       position: relative;
-      z-index: 1;
-    }
-    .promise-cell + .promise-cell {
-      border-left: 1px solid rgba(201,168,76,0.08);
-      padding-left: 24px;
-    }
-    .promise-icon {
-      flex-shrink: 0;
-      width: 34px; height: 34px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(201,168,76,0.32);
-      color: var(--gold);
-    }
-    .promise-icon svg { width: 16px; height: 16px; }
-    .promise-text { display: flex; flex-direction: column; gap: 2px; }
-    .promise-eyebrow {
-      font-size: 0.6rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--gold);
-      opacity: 0.85;
-    }
-    .promise-label {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 24px;
+      text-align: center;
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.05rem;
+      font-size: clamp(1.7rem, 3.2vw, 2.8rem);
       font-weight: 400;
+      font-style: italic;
+      line-height: 1.32;
       color: var(--warm-white);
-      line-height: 1.3;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.005em;
     }
-    @media (max-width: 900px) {
-      .promise-strip {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 18px;
-        padding: 22px 24px;
-      }
-      .promise-cell + .promise-cell { border-left: none; padding-left: 0; }
-      .promise-cell:nth-child(even) { border-left: 1px solid rgba(201,168,76,0.08); padding-left: 18px; }
+    .about-quote::before, .about-quote::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 1px;
+      margin: 0 auto;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.65;
     }
-    @media (max-width: 480px) {
-      .promise-strip { grid-template-columns: 1fr; }
-      .promise-cell:nth-child(even) { border-left: none; padding-left: 0; }
-      .promise-cell + .promise-cell { border-top: 1px solid rgba(201,168,76,0.08); padding-top: 14px; }
+    .about-quote::before { margin-bottom: 28px; }
+    .about-quote::after { margin-top: 28px; }
+    .about-quote em {
+      font-style: italic;
+      background: linear-gradient(135deg, #b8963e 0%, #e8d080 50%, #c9a84c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    @media (max-width: 768px) {
+      #about { padding: 72px 24px; }
+      .about-quote::before, .about-quote::after { width: 40px; }
+      .about-quote::before { margin-bottom: 22px; }
+      .about-quote::after { margin-top: 22px; }
     }
 
     /* ============ DOCTOR / MEET YOUR DOCTOR ============ */
@@ -1380,13 +1312,14 @@
     /* (Old card styles removed — using vertical .svc-row layout) */
 
     /* ============ WHY ============ */
-    #why {
+    /* ============ TESTIMONIALS (placeholder) ============ */
+    #testimonials {
       padding: 112px 56px;
       background: var(--obsidian-2);
       position: relative;
       overflow: hidden;
     }
-    #why::before {
+    #testimonials::before {
       content: '';
       position: absolute;
       top: -160px; right: -160px;
@@ -1395,55 +1328,108 @@
       background: radial-gradient(circle, rgba(201,168,76,0.045) 0%, transparent 65%);
       pointer-events: none;
     }
+    .testimonials-head {
+      max-width: 640px;
+      margin-bottom: 56px;
+    }
+    .testimonials-sub {
+      margin-top: 22px;
+      font-size: clamp(0.96rem, 1.1vw, 1.05rem);
+      font-weight: 400;
+      line-height: 1.7;
+      color: rgba(245,237,224,0.6);
+      max-width: 560px;
+    }
 
-    .why-grid {
+    .testimonials-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 3px;
-      margin-top: 64px;
     }
-
-    .why-card {
+    .testimonial-card {
+      position: relative;
       background: rgba(255,255,255,0.018);
       border: 1px solid rgba(201,168,76,0.07);
-      padding: 44px 40px;
+      padding: 44px 38px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
       transition: border-color 0.4s, background 0.4s;
     }
-    .why-card:hover {
+    .testimonial-card:hover {
       border-color: rgba(201,168,76,0.18);
       background: rgba(201,168,76,0.025);
     }
-
-    .why-num {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 3.5rem;
-      font-weight: 300;
-      line-height: 1;
-      color: rgba(201,168,76,0.12);
-      margin-bottom: 20px;
-      letter-spacing: -0.03em;
+    .testimonial-card.is-awaiting .testimonial-quote {
+      color: rgba(245,237,224,0.42);
+      font-style: italic;
     }
-
-    .why-icon {
-      width: 44px; height: 44px;
-      margin-bottom: 24px;
+    .testimonial-quote-mark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem;
+      line-height: 0.8;
+      color: var(--gold);
+      opacity: 0.35;
+      letter-spacing: -0.04em;
+      margin-bottom: -18px;
+    }
+    .testimonial-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.05rem, 1.25vw, 1.2rem);
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--warm-white);
+      letter-spacing: 0.005em;
+    }
+    .testimonial-meta {
+      margin-top: auto;
+      padding-top: 18px;
+      border-top: 1px solid rgba(201,168,76,0.1);
+    }
+    .testimonial-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--cream);
+      letter-spacing: 0.01em;
+      margin-bottom: 4px;
+    }
+    .testimonial-treatment {
+      font-size: 0.62rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
       color: var(--gold);
     }
-
-    .why-heading {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.6rem, 2.2vw, 2rem);
-      font-weight: 400;
-      color: var(--warm-white);
-      margin-bottom: 16px;
-      line-height: 1.2;
+    .testimonial-pending {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      font-size: 0.55rem;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: rgba(201,168,76,0.7);
+      background: rgba(13,11,12,0.4);
+      border: 1px solid rgba(201,168,76,0.18);
+      backdrop-filter: blur(4px);
+    }
+    .testimonial-pending::before {
+      content: '';
+      width: 5px; height: 5px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 6px rgba(201,168,76,0.5);
+      animation: pulseDot 2.4s ease-in-out infinite;
+    }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
     }
 
-    .why-text {
-      font-size: clamp(0.95rem, 1.05vw, 1.05rem);
-      font-weight: 400;
-      line-height: 1.75;
-      color: rgba(245,237,224,0.7);
+    @media (max-width: 900px) {
+      .testimonial-pending { font-size: 0.5rem; padding: 4px 8px; }
     }
 
     /* ============ HOW IT WORKS / PATIENT JOURNEY ============ */
@@ -2539,11 +2525,11 @@
       .nav-logo .sl-logo { height: 46px; }
       #hero .hero-content { padding: 0 32px; padding-top: 90px; }
       .hero-stats { grid-template-columns: repeat(2, 1fr); }
-      #about { padding: 64px 32px; gap: 40px; }
+      #about { padding: 80px 32px; }
       .svc-rows { padding: 0 32px; }
       .svc-row { gap: 50px; padding: 60px 0; min-height: auto; }
-      #why { padding: 80px 32px; }
-      .why-grid { grid-template-columns: 1fr; gap: 3px; }
+      #testimonials { padding: 80px 32px; }
+      .testimonials-grid { grid-template-columns: 1fr; gap: 3px; }
       #consult { padding: 72px 32px; grid-template-columns: 1fr; gap: 40px; }
       .consult-actions { align-items: flex-start; }
       footer { padding: 64px 32px 36px; }
@@ -2551,7 +2537,7 @@
     }
     @media (max-width: 768px) {
       .nav-logo .sl-logo { height: 40px; }
-      #about { grid-template-columns: 1fr; }
+      /* (about is now flex-centered, no grid override needed at 768px) */
       #services { padding: 80px 0 40px; }
       .svc-rows { padding: 0 24px; }
       .svc-row {
@@ -2675,7 +2661,7 @@
     <ul class="nav-links">
       <li><a href="#doctor">Meet Your Doctor</a></li>
       <li><a href="#services">Services</a></li>
-      <li><a href="#why">Why Us</a></li>
+      <li><a href="#testimonials">Reviews</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a href="#consult">Consult</a></li>
       <li><a href="#contact">Contact</a></li>
@@ -2719,7 +2705,7 @@
       </h1>
 
       <p class="hero-body">
-        Advanced aesthetic and wellness treatments — doctor-guided, science-backed, and tailored precisely to your confidence goals.
+        Aesthetic medicine designed by a UK-registered physician — for results that look like you, only sharper.
       </p>
 
       <div class="hero-btns">
@@ -2744,58 +2730,13 @@
     </div>
   </section>
 
-  <!-- ===== PROMISE STRIP — your first visit, on the house ===== -->
-  <div class="promise-strip" data-stagger data-stagger-tight aria-label="What's included with your first visit">
-    <div class="promise-cell">
-      <span class="promise-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-      </span>
-      <span class="promise-text">
-        <span class="promise-eyebrow">No charge</span>
-        <span class="promise-label">Free Initial Consultation</span>
-      </span>
-    </div>
-    <div class="promise-cell">
-      <span class="promise-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-      </span>
-      <span class="promise-text">
-        <span class="promise-eyebrow">Yours alone</span>
-        <span class="promise-label">Personalised Treatment Plan</span>
-      </span>
-    </div>
-    <div class="promise-cell">
-      <span class="promise-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3M5 9h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2zM12 13v4M10 15h4"/></svg>
-      </span>
-      <span class="promise-text">
-        <span class="promise-eyebrow">Doctor-led</span>
-        <span class="promise-label">UK-Registered Care</span>
-      </span>
-    </div>
-    <div class="promise-cell">
-      <span class="promise-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
-      </span>
-      <span class="promise-text">
-        <span class="promise-eyebrow">Included</span>
-        <span class="promise-label">Body Composition Analysis</span>
-      </span>
-    </div>
-  </div>
+  <div class="shimmer-bar"></div>
 
-  <!-- ===== ABOUT BAND ===== -->
-  <section id="about" data-stagger data-takeover>
-    <div class="about-quote">
-      "Where <em>science</em> meets artistry — and subtle changes create <em>real results.</em>"
-    </div>
-    <div class="about-right">
-      <div class="about-lbl">About ShapeLab</div>
-      <h2 class="about-heading">Puerto Princesa's Premier Aesthetic Clinic</h2>
-      <p class="about-text">
-        Located in the heart of Puerto Princesa City, ShapeLab Aesthetic Clinic is a doctor-led center dedicated to non-surgical body sculpting, skin renewal, and holistic wellness. Every treatment begins with a complimentary body composition analysis and a personalized consultation — because your journey is uniquely yours.
-      </p>
-    </div>
+  <!-- ===== ABOUT BAND — single centred brand quote ===== -->
+  <section id="about" data-takeover aria-label="ShapeLab brand statement">
+    <blockquote class="about-quote">
+      "Where <em>science</em> meets artistry &mdash; and subtle changes create <em>real results.</em>"
+    </blockquote>
   </section>
 
   <div class="shimmer-bar"></div>
@@ -3141,45 +3082,42 @@
 
   <div class="shimmer-bar"></div>
 
-  <!-- ===== WHY SHAPELAB ===== -->
-  <section id="why" data-stagger data-takeover>
-    <div style="max-width:560px;">
-      <div class="section-label">The ShapeLab Difference</div>
-      <h2 class="section-title">Science. <em>Artistry.</em><br>Results You Can See.</h2>
+  <!-- ===== TESTIMONIALS (placeholder until Dr. Hernandez sends real quotes) ===== -->
+  <section id="testimonials" data-stagger data-takeover aria-label="Patient testimonials">
+    <div class="testimonials-head">
+      <div class="section-label">What Patients Say</div>
+      <h2 class="section-title">Real Stories, <em>Real Results.</em></h2>
+      <p class="testimonials-sub">Patient testimonials are being collected with their written consent. Real quotes will appear here as they're approved — until then, the slot is held.</p>
     </div>
 
-    <div class="why-grid" data-stagger>
-      <div class="why-card">
-        <div class="why-num">01</div>
-        <svg class="why-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="24" cy="14" r="7"/>
-          <path d="M10 40c0-8 4-12 14-12s14 4 14 12"/>
-          <path d="M21 23l-4 12 7-5 7 5-4-12" stroke-width="0.8"/>
-        </svg>
-        <div class="why-heading">Doctor-Guided Treatments</div>
-        <div class="why-text">Every treatment plan is designed and supervised by our licensed physician. Your personalized consultation ensures the right approach for your unique body and goals.</div>
-      </div>
-      <div class="why-card">
-        <div class="why-num">02</div>
-        <svg class="why-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="8" y="10" width="32" height="28" rx="3"/>
-          <path d="M16 24l5 5 11-10"/>
-          <path d="M8 17h32"/>
-          <circle cx="38" cy="12" r="4" fill="rgba(201,168,76,0.15)"/>
-          <path d="M36.5 12l1 1.2 2-2" stroke-width="0.8"/>
-        </svg>
-        <div class="why-heading">Clinically Proven Technology</div>
-        <div class="why-text">We use the latest FDA-recognized aesthetic devices — from Emsculpt body sculpting to RF skin tightening — so your results are real, measurable, and lasting.</div>
-      </div>
-      <div class="why-card">
-        <div class="why-num">03</div>
-        <svg class="why-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M24 8l4 9 10 1.5-7.2 7 1.7 10L24 30l-8.5 5.5 1.7-10L10 18.5 20 17z"/>
-          <circle cx="24" cy="24" r="5" fill="rgba(201,168,76,0.1)"/>
-        </svg>
-        <div class="why-heading">Tailored to You</div>
-        <div class="why-text">No cookie-cutter plans. Your complimentary body composition analysis and in-depth consultation build a roadmap that's specific to your body, your timeline, and your confidence.</div>
-      </div>
+    <div class="testimonials-grid" data-stagger>
+      <article class="testimonial-card is-awaiting" aria-label="Patient testimonial placeholder">
+        <span class="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
+        <blockquote class="testimonial-quote">A real patient quote will appear here — about how the consultation felt, what was treated, and what changed afterwards.</blockquote>
+        <div class="testimonial-meta">
+          <div class="testimonial-name">— Patient name</div>
+          <div class="testimonial-treatment">Treatment</div>
+        </div>
+        <span class="testimonial-pending">Awaiting consent</span>
+      </article>
+      <article class="testimonial-card is-awaiting" aria-label="Patient testimonial placeholder">
+        <span class="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
+        <blockquote class="testimonial-quote">A second patient story slot — for someone who tried a different treatment and wants to share what surprised them most about the experience.</blockquote>
+        <div class="testimonial-meta">
+          <div class="testimonial-name">— Patient name</div>
+          <div class="testimonial-treatment">Treatment</div>
+        </div>
+        <span class="testimonial-pending">Awaiting consent</span>
+      </article>
+      <article class="testimonial-card is-awaiting" aria-label="Patient testimonial placeholder">
+        <span class="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
+        <blockquote class="testimonial-quote">A third voice — ideally a longer-term patient who can speak to results over weeks or months, not just one visit.</blockquote>
+        <div class="testimonial-meta">
+          <div class="testimonial-name">— Patient name</div>
+          <div class="testimonial-treatment">Treatment</div>
+        </div>
+        <span class="testimonial-pending">Awaiting consent</span>
+      </article>
     </div>
   </section>
 
@@ -3263,7 +3201,7 @@
         Not Sure<br>Where to Start?<br><em>We'll Guide You.</em>
       </h2>
       <p class="consult-sub">
-        Share your concerns with us. Our doctor will create a personalized treatment plan tailored to your goals — and your complimentary body composition assessment is on us.
+        Tell us your goals. We'll book you in with Dr. Hernandez for a free initial consultation — no pressure, no commitment.
       </p>
     </div>
     <div class="consult-actions">

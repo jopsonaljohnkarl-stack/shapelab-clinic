@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(jq -r '.tool_input.file_path // .tool_response.filePath // empty'); case \"$FILE\" in *index.html|*.css) echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"Mobile-first reminder: ShapeLab ships on phones. Before declaring this change done, screenshot at 375×667 (iPhone SE) and 390×844 (iPhone 14) and verify.\"}}' ;; esac"
+          }
+        ]
+      }
+    ]
+  }
+}

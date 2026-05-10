@@ -3,6 +3,14 @@
 ## Always Do First
 - **Invoke the `frontend-design` skill** before writing any frontend code, every session, no exceptions.
 
+## Mobile-First Verification (mandatory)
+ShapeLab is consumed primarily on mobile (Filipino aesthetic clinic audience). **Every UI change must be verified at mobile widths before being declared done.**
+
+- After any edit to `index.html` (or any future CSS files), screenshot at **375×667 (iPhone SE)** AND **390×844 (iPhone 14)** before claiming the change ships. Use `await page.setViewport({ width: 375, height: 667, deviceScaleFactor: 2, isMobile: true, hasTouch: true })` (and 390/844 for the second pass) in your puppeteer script.
+- Common breakage points in this codebase: hero stats grid, doctor section image fit, services panels (mobile uses a different layout — see `@media (max-width: 900px)` PSR rules), floating CTAs not overlapping content, consult button widths, FAQ accordion padding, anchor scroll-margin under banner+navbar.
+- If you can't run mobile screenshots in this session, **say so explicitly** — never assume the change works on phones. "Tested on desktop only" is acceptable; silently shipping is not.
+- The PostToolUse hook in `.claude/settings.json` will inject this reminder automatically after each Edit/Write to relevant files.
+
 ## Reference Images
 - If a reference image is provided: match layout, spacing, typography, and color exactly. Swap in placeholder content (images via `https://placehold.co/`, generic copy). Do not improve or add to the design.
 - If no reference image: design from scratch with high craft (see guardrails below).
