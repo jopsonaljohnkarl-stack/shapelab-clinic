@@ -2792,7 +2792,10 @@
       .mob-menu-btn { display: flex; }
       .nav-logo .sl-logo { height: 46px; }
       #hero .hero-content { padding: 0 32px; padding-top: 90px; }
-      .hero-stats { grid-template-columns: repeat(2, 1fr); }
+      /* Keep 3-col across tablet too — 2-col leaves a lonely 3rd stat orphan-cell */
+      .hero-stats { grid-template-columns: repeat(3, 1fr); }
+      .stat-cell { padding: 18px 14px; }
+      .stat-lbl { font-size: 0.62rem; letter-spacing: 0.15em; }
       #about { padding: 80px 32px; }
       .svc-rows { padding: 0 32px; }
       .svc-row { gap: 50px; padding: 60px 0; min-height: auto; }

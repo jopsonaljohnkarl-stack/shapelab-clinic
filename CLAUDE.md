@@ -3,13 +3,43 @@
 ## Always Do First
 - **Invoke the `frontend-design` skill** before writing any frontend code, every session, no exceptions.
 
-## Mobile-First Verification (mandatory)
-ShapeLab is consumed primarily on mobile (Filipino aesthetic clinic audience). **Every UI change must be verified at mobile widths before being declared done.**
+## Responsive Verification (mandatory — mobile + tablet + desktop)
+ShapeLab is used across phones (primary), tablets (real but secondary), and desktops. **Every UI change must be verified at all three form factors before being declared done.**
 
-- After any edit to `index.html` (or any future CSS files), screenshot at **375×667 (iPhone SE)** AND **390×844 (iPhone 14)** before claiming the change ships. Use `await page.setViewport({ width: 375, height: 667, deviceScaleFactor: 2, isMobile: true, hasTouch: true })` (and 390/844 for the second pass) in your puppeteer script.
-- Common breakage points in this codebase: hero stats grid, doctor section image fit, services panels (mobile uses a different layout — see `@media (max-width: 900px)` PSR rules), floating CTAs not overlapping content, consult button widths, FAQ accordion padding, anchor scroll-margin under banner+navbar.
-- If you can't run mobile screenshots in this session, **say so explicitly** — never assume the change works on phones. "Tested on desktop only" is acceptable; silently shipping is not.
-- The PostToolUse hook in `.claude/settings.json` will inject this reminder automatically after each Edit/Write to relevant files.
+After any edit to `index.html` (or any future CSS files), screenshot at **all five** of these viewports before claiming the change ships:
+
+| Device | Viewport | Puppeteer config |
+|---|---|---|
+| iPhone SE | 375×667 | `width: 375, height: 667, deviceScaleFactor: 2, isMobile: true, hasTouch: true` |
+| iPhone 14 | 390×844 | `width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true` |
+| iPad portrait | 820×1180 | `width: 820, height: 1180, deviceScaleFactor: 2, isMobile: true, hasTouch: true` |
+| iPad landscape | 1180×820 | `width: 1180, height: 820, deviceScaleFactor: 2, isMobile: true, hasTouch: true` |
+| Desktop | 1440×900 | `width: 1440, height: 900` |
+
+**Key breakpoints in this codebase** (memorize these — they're where bugs hide):
+- `@media (max-width: 1024px)` — tablet adjustments (nav collapses, hero-stats stays 3-col, services starts narrower padding)
+- `@media (max-width: 900px)` — services switches to compact tap-to-expand mobile cards (PSR pinned scroll disabled)
+- `@media (max-width: 768px)` — nav-logo shrinks, services full-width, about flex-centered
+- `@media (max-width: 480px)` — narrowest mobile (hero buttons stack, footer 1-col)
+
+**Common tablet-specific bugs** (the 481–1024px window where most subtle issues hide):
+- Hero stats orphan cell (was 2-col with 3 stats — now fixed to 3-col across)
+- PSR pinned scroll active at iPad landscape but mobile compact cards at iPad portrait — different UX on the same device
+- Footer grid collapses 4-col → 2-col at 1024 → 1-col at 768
+- About section is full-width centered quote at all sizes
+- Doctor section: 2-col grid at >900px, stacked at ≤900px
+
+**Common mobile-specific bugs:**
+- Hero stats grid (now 3-col everywhere)
+- Doctor image fit / WebP loading
+- Services compact cards (tap-to-expand) — different layout than desktop's pinned scroll
+- Floating CTAs not overlapping consult buttons or cookie banner
+- FAQ accordion padding
+- Anchor scroll-margin under fixed banner + navbar
+
+If you can't run viewport screenshots in this session, **say so explicitly** — never assume the change works on a form factor you haven't tested. "Tested on desktop only" is acceptable; silently shipping is not.
+
+The PostToolUse hook in `.claude/settings.json` will inject a viewport reminder automatically after each Edit/Write to `index.html` or `*.css`.
 
 ## Reference Images
 - If a reference image is provided: match layout, spacing, typography, and color exactly. Swap in placeholder content (images via `https://placehold.co/`, generic copy). Do not improve or add to the design.

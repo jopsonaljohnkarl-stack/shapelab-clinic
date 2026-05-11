@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "FILE=$(jq -r '.tool_input.file_path // .tool_response.filePath // empty'); case \"$FILE\" in *index.html|*.css) echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"Mobile-first reminder: ShapeLab ships on phones. Before declaring this change done, screenshot at 375×667 (iPhone SE) and 390×844 (iPhone 14) and verify.\"}}' ;; esac"
+            "command": "FILE=$(jq -r '.tool_input.file_path // .tool_response.filePath // empty'); case \"$FILE\" in *index.html|*.css) echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"Responsive verification reminder: ShapeLab targets mobile + tablet + desktop. Before declaring this change done, screenshot at iPhone SE 375x667, iPhone 14 390x844, iPad portrait 820x1180, iPad landscape 1180x820, and desktop 1440x900. The 481-1024px tablet window is where most subtle bugs hide.\"}}' ;; esac"
           }
         ]
       }
