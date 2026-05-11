@@ -2314,9 +2314,13 @@
     .psr-panels {
       position: relative;
       width: 100%;
-      max-width: 1240px;
+      /* Always keep ≥80px of breathing room on each side so the card+text pair
+         stays visually centered on 1280–1366px laptops (Dell, ThinkPad, etc.),
+         not just on 1440+ MacBooks. inset:0 on absolute children means container
+         padding is ignored, so the side margin must come from max-width itself. */
+      max-width: min(1240px, calc(100% - 160px));
       margin: 0 auto;
-      padding: 0 56px;
+      padding: 0;
       height: 78vh;
       max-height: 720px;
     }
